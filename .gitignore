@@ -1,0 +1,14 @@
+# Local state includes private paths, connection tokens and recovery copies.
+.data/
+设置.json
+查看记录.html
+当前技能.csv
+变更记录.csv
+*.log
+*.tmp
+__pycache__/
+*.py[cod]
+.venv/
+tests/ledger-test-fixtures/
+.DS_Store
+Thumbs.db

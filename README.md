@@ -2,6 +2,8 @@
 
 一个运行在 Windows 本机的轻量 Skill 管理工具：查看安装了什么、记录何时发生变化，并在确认影响范围后卸载技能。支持登录 Windows 后自动在后台记录，无需手动维护表格。
 
+最近更新：[变更记录](CHANGELOG.md)。
+
 使用 Python 标准库与原生 HTML / CSS / JavaScript，无需数据库、Node 依赖或云端服务。它是独立的本地工具，并非 OpenAI 官方产品。
 
 ## 用途

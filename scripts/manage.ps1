@@ -48,5 +48,5 @@ if(-not $runtime){
 }
 if(-not $runtime){throw 'Python 3.11+ was not found. Install Python and add it to PATH.'}
 $arguments='"{0}" --watch --quiet' -f $scriptPath
-if($Action -eq 'Open'){$arguments+=' --open'}
+if($Action -eq 'Open'){$arguments='"{0}"' -f (Join-Path $toolDirectory 'launch.py')}
 Start-Process -FilePath $runtime -ArgumentList $arguments -WorkingDirectory $toolDirectory -WindowStyle Hidden

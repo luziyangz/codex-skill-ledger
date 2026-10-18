@@ -15,12 +15,13 @@ import sys
 import time
 import tomllib
 import webbrowser
+import skill_scope
 
 HERE=Path(__file__).resolve().parent
 if __name__=='__main__':sys.modules.setdefault('skill_ledger',sys.modules[__name__])
 LOCAL_TZ=timezone(timedelta(hours=8))
-FIELDS=['名称','分类','状态','用途','调用方式','使用方法','技能来源','版本','副本数','文件路径']
-HISTORY_FIELDS=['事件时间','时间类型','操作','技能名称','分类','说明','记录依据']
+FIELDS=['名称','所属项目 / 范围','状态','用途','调用方式','使用方法','技能来源','版本','副本数','文件路径']
+HISTORY_FIELDS=['事件时间','时间类型','操作','技能名称','所属项目 / 范围','说明','记录依据']
 
 def now(): return datetime.now(LOCAL_TZ).isoformat(timespec='seconds')
 def read_json(p): return json.loads(Path(p).read_text(encoding='utf-8-sig'))
@@ -135,8 +136,10 @@ def scan(settings,reference):
             plugin_disabled=config.get('plugins',{}).get(origin,{}).get('enabled') is False
             state='配置停用' if plugin_disabled else ('缓存待核对' if inactive else '已登记')
         else: state='已登记'
-        identity=plugin+':'+name if plugin else name
-        grouped[identity].append({'path':str(path),'origin':origin,'version':version,'state':state,'hash':checksum,'description':description})
+        skill_name=plugin+':'+name if plugin else name
+        scope=skill_scope.scope_for(path,settings) if not plugin else {'scope_id':'global','scope_label':'全局技能','scope_path':'','scope_kind':'global'}
+        identity=skill_scope.identity(skill_name,scope)
+        grouped[identity].append({'skill_name':skill_name,**scope,'path':str(path),'origin':origin,'version':version,'state':state,'hash':checksum,'description':description})
     if errors:
         raise RuntimeError('扫描未完整完成，未写入变更记录。\n'+'\n'.join(errors[:8]))
     result={}
@@ -144,8 +147,8 @@ def scan(settings,reference):
         copies.sort(key=lambda c:c['path'])
         states={c['state'] for c in copies}
         state='已登记' if '已登记' in states else ('配置停用' if '配置停用' in states else '缓存待核对')
-        ref=reference.get(identity,{})
-        result[identity]={'name':identity,'state':state,'purpose':ref.get('purpose') or copies[0]['description'],
+        ref=reference.get(copies[0]['skill_name'],{})
+        result[identity]={'name':identity,**{k:copies[0][k] for k in ('skill_name','scope_id','scope_label','scope_path','scope_kind')},'state':state,'purpose':ref.get('purpose') or copies[0]['description'],
             'origin':' ; '.join(sorted({c['origin'] for c in copies})),'version':' ; '.join(sorted({c['version'] for c in copies if c['version']})),
             'paths':[c['path'] for c in copies],'copies':len(copies),
             'fingerprint':hashlib.sha256(json.dumps([(c['path'],c['hash'],c['state']) for c in copies],ensure_ascii=False).encode()).hexdigest()}
@@ -159,7 +162,7 @@ def changes(previous,current,stamp):
             action='新增';detail='首次检测到；状态：'+new['state']
         elif new is None:
             action='移除';detail='本次扫描不再发现原有技能定义；此前状态：'+old['state']
-        elif old==new: continue
+        elif all(old.get(k)==new.get(k) for k in ('state','version','paths','purpose','copies')) and (old.get('origin')==new.get('origin') or old.get('_scope_migrated')) and (old.get('fingerprint')==new.get('fingerprint') or old.get('_scope_migrated')): continue
         else:
             notes=[]
             if old['state']!=new['state']: notes.append('状态：'+old['state']+' → '+new['state'])
@@ -220,7 +223,7 @@ def registry(ledger,reference):
     result=[]
     for name in sorted(known):
         current=snapshot.get(name);last=latest.get(name,{})
-        ref=reference.get(name,{})
+        ref=reference.get(skill_scope.canonical(name),{})
         if current and current['state']!='缓存待核对':
             status='已停用' if current['state']=='配置停用' else '已启用'
             item=current
@@ -298,7 +301,7 @@ USAGE_EXAMPLES={
 }
 
 def usage_info(row):
-    name=row['name'];task=USAGE_EXAMPLES.get(name)
+    name=row.get('skill_name',row['name']);task=USAGE_EXAMPLES.get(name)
     if not task:
         purpose=re.sub(r'\s+',' ',row.get('purpose','')).strip().rstrip('。.!！')[:160]
         task=('根据我提供的材料，'+purpose+'。\n【粘贴相关材料和具体要求】') if purpose else '处理以下任务，先说明需要的材料：\n【任务和输入材料】'
@@ -316,6 +319,11 @@ def export(base,ledger):
     skills=registry(ledger,reference)
     settings=management.configured(base)
     for row in skills:
+        row['skill_name']=row.get('skill_name') or skill_scope.canonical(row['name'])
+        record=ledger['snapshot'].get(row['name']) or next((e.get('skill',{}) for e in reversed(ledger['events']) if e['name']==row['name']),{})
+        info={k:record[k] for k in ('scope_id','scope_label','scope_path','scope_kind') if k in record}
+        if not info:info=skill_scope.scope_for(row['paths'][0],settings) if row['paths'] and ':' not in row['name'] else {'scope_id':'global','scope_label':'全局技能','scope_path':'','scope_kind':'global'}
+        row.update(info);row['topic']=row['category']
         row['management']=management.capability(ledger['snapshot'].get(row['name']),settings)
         row['installed']=row['status'] in ('已启用','已停用')
         row['display_status']='已安装' if row['installed'] else '已卸载'
@@ -331,10 +339,16 @@ def export(base,ledger):
         else:
             row['source_type']='独立安装';row['source_detail']='独立安装在本机技能目录中；原始作者和下载网址未记录。'
     events=operation_log(ledger['events'],reference)
+    by_name={r['name']:r for r in skills}
+    for event in events:
+        if event['name'] in by_name:
+            owner=by_name[event['name']]
+            event.update({k:owner.get(k,'') for k in ('skill_name','scope_id','scope_label','scope_path','scope_kind')})
     known={r['name'] for r in skills}
     visible_events=[e for e in events if e['name'] in known]
-    revision=hashlib.sha256(json.dumps([skills,visible_events],ensure_ascii=False,sort_keys=True).encode()).hexdigest()[:20]
-    data=json.dumps({'updated':ledger['last_scan'],'revision':revision,'skills':skills,'events':visible_events},ensure_ascii=False).replace('<','\\u003c').replace('>','\\u003e').replace('&','\\u0026').replace('\u2028','\\u2028').replace('\u2029','\\u2029')
+    discovery=skill_scope.discovery_info(base,settings)
+    revision=hashlib.sha256(json.dumps([skills,visible_events,discovery['roots'],discovery['scopes'],discovery['warnings']],ensure_ascii=False,sort_keys=True).encode()).hexdigest()[:20]
+    data=json.dumps({'updated':ledger['last_scan'],'revision':revision,'skills':skills,'events':visible_events,'discovery':discovery},ensure_ascii=False).replace('<','\\u003c').replace('>','\\u003e').replace('&','\\u0026').replace('\u2028','\\u2028').replace('\u2029','\\u2029')
     template_path=base/'查看记录.template.html'
     if template_path.exists():
         template=template_path.read_text(encoding='utf-8')
@@ -345,8 +359,8 @@ def export(base,ledger):
     # An open CSV must not prevent the live page from receiving fresh data.
     warnings=[]
     for filename,fields,rows in [
-        ('当前技能.csv',FIELDS,[[r['name'],r['category'],r['display_status'],r['purpose'],r['invocation']['label'],'\n'.join(filter(None,[r['usage_note'],r['usage_desktop_hint'],r['usage']])),r['source'],r['version'],r['copies'],' ; '.join(r['paths'])] for r in skills]),
-        ('变更记录.csv',HISTORY_FIELDS,[[e['time'],e['time_label'],e['action_label'],e['name'],e['category'],e['description'],e.get('evidence','')] for e in visible_events])]:
+        ('当前技能.csv',FIELDS,[[r['skill_name'],r.get('scope_label','全局技能'),r['display_status'],r['purpose'],r['invocation']['label'],'\n'.join(filter(None,[r['usage_note'],r['usage_desktop_hint'],r['usage']])),r['source'],r['version'],r['copies'],' ; '.join(r['paths'])] for r in skills]),
+        ('变更记录.csv',HISTORY_FIELDS,[[e['time'],e['time_label'],e['action_label'],e.get('skill_name',e['name']),e.get('scope_label','全局技能'),e['description'],e.get('evidence','')] for e in visible_events])]:
         try:write_csv(base/filename,fields,rows)
         except OSError as error:warnings.append(filename+': '+str(error))
     atomic_write(base/'.data'/'export-status.json',json.dumps({'warnings':warnings},ensure_ascii=False))
@@ -358,13 +372,14 @@ def update(base,verbose=True):
         import skill_manager as management
         settings=management.configured(base);reference=read_json(base/'.data'/'reference.json')
         store=base/'.data'/'ledger.json';existing=read_json(store) if store.exists() else None
+        if existing:existing=skill_scope.migrate(existing,settings)
         stamp=now();snapshot=scan(settings,reference)
         if existing:
             events=changes(existing['snapshot'],snapshot,stamp)
             ledger={**existing,'snapshot':snapshot,'events':existing['events']+events,'last_scan':stamp}
         else:
             imported=read_json(base/'.data'/'历史导入.json')
-            events=[];ledger={'schema':1,'created':stamp,'last_scan':stamp,'snapshot':snapshot,'events':imported,
+            events=[];ledger={'schema':1,'scope_schema':1,'created':stamp,'last_scan':stamp,'snapshot':snapshot,'events':imported,
                 'baseline_note':'初次扫描为登记基线，不推测历史安装时间。'}
         # One atomic authoritative file commits snapshot and events together.
         atomic_write(store,json.dumps(ledger,ensure_ascii=False,indent=2))

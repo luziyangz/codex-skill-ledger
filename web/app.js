@@ -7,6 +7,9 @@ const SkillLedgerModel=(()=>{
  const installed=row=>typeof row.installed==='boolean'?row.installed:row.status==='已安装';
  const toggleSelection=(current,names,checked)=>{const next=new Set(current);for(const name of names){if(checked)next.add(name);else next.delete(name)}return next};
  const pruneSelection=(current,skills)=>new Set(skills.filter(row=>installed(row)&&current.has(row.name)).map(row=>row.name));
+ const scopeKey=row=>row.scope_id||row.category||'global';
+ const scopeLabel=row=>row.scope_label||row.category||'全局技能';
+ const toggleScope=(current,names)=>toggleSelection(current,names,!names.length||!names.every(name=>current.has(name)));
  const contains=(value,q)=>!q||String(value||'').toLowerCase().includes(q.trim().toLowerCase());
  function normalize(raw){
   const state=defaults();if(!raw||typeof raw!=='object')return state;
@@ -41,13 +44,13 @@ const SkillLedgerModel=(()=>{
   const f=state[state.view];let rows;
   if(state.view==='skills')rows=data.skills.filter(r=>(!f.exactName?r.name&&contains(r.name,f.name):r.name===f.exactName)&&(!f.status||r.status===f.status)&&contains(r.purpose,f.purpose)&&contains([r.invocation?.label,r.usage_note,r.usage].filter(Boolean).join(' '),f.usage)&&(!f.invocation||r.invocation?.mode===f.invocation)&&(!f.source||r.source===f.source));
   else rows=data.events.filter(e=>(!f.exactName?contains(e.name,f.name):e.name===f.exactName)&&(!f.action||e.action===f.action)&&contains(e.description||e.detail,f.description)&&(!f.from||e.time.slice(0,10)>=f.from)&&(!f.to||e.time.slice(0,10)<=f.to));
-  if(!ignoreCategory&&state.category)rows=rows.filter(r=>r.category===state.category);
-  const sort=state.sort[state.view];return [...rows].sort((a,b)=>String(a[sort.key]||'').localeCompare(String(b[sort.key]||''),'zh-CN')*sort.direction)
+  if(!ignoreCategory&&state.category)rows=rows.filter(r=>scopeKey(r)===state.category);
+  const sort=state.sort[state.view],sortValue=row=>sort.key==='category'?scopeLabel(row):sort.key==='name'?(row.skill_name||row.name):row[sort.key];return [...rows].sort((a,b)=>String(sortValue(a)||'').localeCompare(String(sortValue(b)||''),'zh-CN')*sort.direction)
  }
  function csv(data,state){
   const rows=select(data,state),history=state.view==='logs';
-  const fields=history?['事件时间','时间类型','操作','技能名称','分类','说明']:['技能名称','分类','状态','用途','调用方式','使用方法','技能来源'];
-  const cells=history?rows.map(r=>[r.time,r.time_label,r.action_label||r.action,r.name,r.category,r.description||r.detail]):rows.map(r=>[r.name,r.category,r.status,r.purpose,r.invocation?.label||'策略待核对',[r.usage_note,r.usage_desktop_hint,r.usage].filter(Boolean).join('\n'),r.source]);
+  const fields=history?['事件时间','时间类型','操作','技能名称','所属项目 / 范围','说明']:['技能名称','所属项目 / 范围','状态','用途','调用方式','使用方法','技能来源'];
+  const cells=history?rows.map(r=>[r.time,r.time_label,r.action_label||r.action,r.skill_name||r.name,scopeLabel(r),r.description||r.detail]):rows.map(r=>[r.skill_name||r.name,scopeLabel(r),r.status,r.purpose,r.invocation?.label||'策略待核对',[r.usage_note,r.usage_desktop_hint,r.usage].filter(Boolean).join('\n'),r.source]);
   const escape=value=>{let text=String(value??'');if(/^[=+\-@\t\r\n]/.test(text))text="'"+text;return '"'+text.replaceAll('"','""')+'"'};
   return '\ufeff'+[fields,...cells].map(row=>row.map(escape).join(',')).join('\r\n')+'\r\n'
  }
@@ -64,12 +67,12 @@ const SkillLedgerModel=(()=>{
   for(const key of Object.keys(state[state.view]))state[state.view][key]=p.get(key)||'';
   state.detail=p.get('detail')?{name:p.get('detail'),eventId:p.get('event')||''}:null;return normalize(state)
  }
- return {defaults,normalize,reduce,select,csv,dateError,hash,fromHash,status,installed,toggleSelection,pruneSelection}
+ return {defaults,normalize,reduce,select,csv,dateError,hash,fromHash,status,installed,toggleSelection,pruneSelection,toggleScope,scopeKey,scopeLabel}
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=SkillLedgerModel;
 if(typeof document!=='undefined')(()=>{
  const M=SkillLedgerModel,$=id=>document.getElementById(id),make=(tag,className,text)=>{const node=document.createElement(tag);if(className)node.className=className;if(text!==undefined)node.textContent=text;return node};
- const prepare=value=>({...value,skills:value.skills.map(row=>{const installed=typeof row.installed==='boolean'?row.installed:['已安装','已启用','已停用'].includes(row.status);return {...row,installed,raw_status:row.status,status:installed?'已安装':'已卸载',invocation:row.invocation||{mode:'unknown',label:'策略待核对',summary:'暂未读取调用策略，建议从技能菜单手动选择。',copies:[]},usage:row.usage||'/'+row.name.split(':').at(-1)+' 【任务和材料】',usage_note:row.usage_note||(!installed?'先安装该技能，再使用下方示例。':row.status==='已停用'?'先在 Codex 中开启该技能的启用设置。':'')}}),events:value.events.map(event=>({...event,raw_action:event.action,action:['归档','移除'].includes(event.action)?'卸载':event.action,action_label:event.action==='归档'?'卸载':event.action_label||event.action}))});
+ const prepare=value=>({...value,skills:value.skills.map(row=>{const installed=typeof row.installed==='boolean'?row.installed:['已安装','已启用','已停用'].includes(row.status);return {...row,installed,raw_status:row.status,status:installed?'已安装':'已卸载',invocation:row.invocation||{mode:'unknown',label:'策略待核对',summary:'暂未读取调用策略，建议从技能菜单手动选择。',copies:[]},usage:row.usage||'/'+(row.skill_name||row.name.split('@@project-')[0]).split(':').at(-1)+' 【任务和材料】',usage_note:row.usage_note||(!installed?'先安装该技能，再使用下方示例。':row.status==='已停用'?'先在 Codex 中开启该技能的启用设置。':'')}}),events:value.events.map(event=>({...event,raw_action:event.action,action:['归档','移除'].includes(event.action)?'卸载':event.action,action_label:event.action==='归档'?'卸载':event.action_label||event.action}))});
  let data=prepare(JSON.parse($('data').textContent)),saved=null,connection=null,selection=new Set(),plan=null,busy=false;
  const access=new URLSearchParams(location.hash.replace(/^#/,''));
  try{saved=JSON.parse(localStorage.getItem('skill-ledger-view-v5'));const token=access.get('access')||sessionStorage.getItem('skill-ledger-access');if(token&&location.protocol==='http:'){connection={url:location.origin,token};sessionStorage.setItem('skill-ledger-access',token)}}catch{}
@@ -77,6 +80,11 @@ if(typeof document!=='undefined')(()=>{
  const timeText=value=>value?value.slice(0,19).replace('T',' '):'未记录';
  const options=(values,selected)=>[...new Set([...values,...(selected?[selected]:[])])].sort((a,b)=>a.localeCompare(b,'zh-CN'));
  const skillMap=()=>new Map(data.skills.map(s=>[s.name,s]));
+ const scopeMap=()=>new Map([...(data.discovery?.scopes||[]).map(r=>[r.scope_id,r]),...data.skills.map(r=>[M.scopeKey(r),{scope_id:M.scopeKey(r),scope_label:M.scopeLabel(r),scope_path:r.scope_path||''}])]);
+ const scopeCaption=key=>key?(scopeMap().get(key)?.scope_label||key):'全部技能';
+ const displayName=name=>{const skill=skillMap().get(name);return skill?.skill_name||name.split('@@project-')[0]};
+ const removalName=name=>displayName(name)+(skillMap().get(name)?.scope_kind==='project'?' · '+M.scopeLabel(skillMap().get(name)):'');
+ if(data.discovery&&state.category&&!scopeMap().has(state.category))state.category='';
  function remember(){try{localStorage.setItem('skill-ledger-view-v5',JSON.stringify(state))}catch{}}
  function writeHistory(push,detailEntry=false){
   const value={skillLedger:true,state:JSON.parse(JSON.stringify(state)),detailEntry};
@@ -102,14 +110,14 @@ if(typeof document!=='undefined')(()=>{
   if(!policy.copies?.length)evidence.append(make('p','','没有可读取的当前技能文件或恢复备份，自动匹配策略尚待核对。'));
   if(policy.description)evidence.append(make('h4','','技能声明的适用场景'),make('p','',policy.description));section.append(evidence);return section
  }
- function nameButton(name,eventId=''){const button=make('button','skill-link',name.includes(':')?name.slice(name.indexOf(':')+1):name);button.type='button';button.title=name;button.onclick=()=>transition({type:'DETAIL',name,eventId},true);return button}
+ function nameButton(name,eventId=''){const button=make('button','skill-link',displayName(name).includes(':')?displayName(name).slice(displayName(name).indexOf(':')+1):displayName(name));button.type='button';button.title=name.includes('@@project-')?displayName(name)+' · '+(skillMap().get(name)?.scope_path||'项目技能'):name;button.onclick=()=>transition({type:'DETAIL',name,eventId},true);return button}
  function buildHead(){
-  const sourceValues=options(data.skills.map(s=>s.source),state.skills.source),categoryValues=options(data.skills.map(s=>s.category),state.category);
+  const sourceValues=options(data.skills.map(s=>s.source),state.skills.source),categoryValues=[...scopeMap().keys()].sort();
   const signature=JSON.stringify([state.view,sourceValues,categoryValues,data.events.map(e=>e.action).filter((v,i,a)=>a.indexOf(v)===i),state.sort[state.view]]);
   if(signature===headerSignature&&state.view===headerView)return;
   const focused=document.activeElement,id=focused?.id,textSelection=focused?.type==='search'?[focused.selectionStart,focused.selectionEnd]:null;
   headerSignature=signature;headerView=state.view;$('head').replaceChildren();$('columns').replaceChildren();
-  const fields=state.view==='skills'?[['技能名称','name',18,'text'],['分类','category',11,'category'],['状态','status',9,'status'],['用途','purpose',20,'text'],['使用方法','usage',20,'text'],['技能来源','source',10,'source']]:[['事件时间','time',22,'range'],['技能名称','name',25,'text'],['分类','category',16,'category'],['操作','action',13,'action'],['说明','description',24,'text']];
+  const fields=state.view==='skills'?[['技能名称','name',18,'text'],['所属范围','category',11,'category'],['状态','status',9,'status'],['用途','purpose',20,'text'],['使用方法','usage',20,'text'],['技能来源','source',10,'source']]:[['事件时间','time',22,'range'],['技能名称','name',25,'text'],['所属范围','category',16,'category'],['操作','action',13,'action'],['说明','description',24,'text']];
   const titles=make('tr'),filters=make('tr','filters');
   if(state.view==='skills'){
    const col=make('col');col.style.width='4%';$('columns').append(col);const th=make('th'),select=make('input');select.type='checkbox';select.id='select-all';select.setAttribute('aria-label','全选当前结果中的已安装技能');select.title='全选当前结果中的已安装技能';select.onchange=()=>{selection=M.toggleSelection(selection,M.select(data,state).filter(M.installed).map(row=>row.name),select.checked);syncSelection()};th.append(select);titles.append(th);filters.append(make('th'))
@@ -124,7 +132,7 @@ if(typeof document!=='undefined')(()=>{
     let control;
     if(['category','source','status','action'].includes(type)){
      control=make('select','filter');const values=type==='category'?categoryValues:type==='source'?sourceValues:type==='status'?['已安装','已卸载']:options(data.events.map(e=>e.action),state.logs.action);
-     control.append(new Option({category:'全部分类',source:'全部来源',status:'全部状态',action:'全部操作'}[type],''));for(const value of values)control.append(new Option(value,value));
+     control.append(new Option({category:'全部范围',source:'全部来源',status:'全部状态',action:'全部操作'}[type],''));for(const value of values)control.append(new Option(type==='category'?scopeCaption(value):value,value));
      control.onchange=()=>transition(type==='category'?{type:'CATEGORY',value:control.value}:{type:'FILTER',key,value:control.value})
     }else{control=make('input','filter');control.type='search';control.placeholder=key==='name'?'筛选名称':'筛选关键词';control.oninput=()=>transition({type:'FILTER',key,value:control.value})}
     control.id='filter-'+key;control.setAttribute('aria-label','筛选'+label);cell.append(control)
@@ -139,49 +147,49 @@ if(typeof document!=='undefined')(()=>{
  function syncControls(){
   for(const [key,value]of Object.entries(state[state.view])){const input=$('filter-'+key);if(input&&input.value!==value)input.value=value}
   if($('filter-category').value!==state.category)$('filter-category').value=state.category;
-  const selected=state[state.view].exactName;$('exact-skill').hidden=!selected;$('exact-skill-name').textContent=selected||'';
+  const selected=state[state.view].exactName;$('exact-skill').hidden=!selected;$('exact-skill-name').textContent=selected?removalName(selected):'';
   const error=M.dateError(state);$('filter-error').textContent=error;$('filter-error').hidden=!error
  }
  function renderCategories(){
   const nav=$('categories'),active=document.activeElement?.dataset?.category;nav.replaceChildren();
-  const categories=options(data.skills.map(s=>s.category),state.category),counts=new Map();
-  for(const row of M.select(data,state,true))counts.set(row.category,(counts.get(row.category)||0)+1);
-  const all=M.select(data,state,true).length;
-  for(const [label,key,count]of [['全部分类','',all],...categories.map(c=>[c,c,counts.get(c)||0])]){
-   const button=make('button','category-button'+(state.category===key?' active':'')+(count===0?' no-results':''));button.type='button';button.dataset.category=key;if(state.category===key)button.setAttribute('aria-current','true');button.append(make('span','',label),make('span','number',count));button.onclick=()=>transition({type:'CATEGORY',value:key});nav.append(button);
-   if(active===key)button.focus()
+  const scopes=scopeMap(),counts=new Map();for(const row of M.select(data,state,true))counts.set(M.scopeKey(row),(counts.get(M.scopeKey(row))||0)+1);
+  const entries=[['全部技能','',M.select(data,state,true).length],...([...scopes.values()].sort((a,b)=>a.scope_id==='global'?-1:b.scope_id==='global'?1:a.scope_label.localeCompare(b.scope_label,'zh-CN')).map(r=>[r.scope_label,r.scope_id,counts.get(r.scope_id)||0]))];
+  for(const [label,key,count]of entries){
+   const button=make('button','category-button'+(state.category===key?' active':'')+(count===0?' no-results':''));button.type='button';button.dataset.category=key;
+   const scope=scopes.get(key);button.title=key==='global'?'用户级独立技能、插件及内置技能':scope?.scope_path||'所有监控范围；数字随当前筛选变化';
+   if(state.category===key)button.setAttribute('aria-current','true');button.append(make('span','',label),make('span','number',count));button.onclick=()=>transition({type:'CATEGORY',value:key});nav.append(button);if(active===key)button.focus()
   }
  }
  function renderRows(){
   const tbody=$('body');tbody.replaceChildren();const rows=M.select(data,state);
   for(const row of rows){const tr=make('tr');
-   if(state.view==='skills'){const pick=make('td','pick-cell'),checkbox=make('input');checkbox.type='checkbox';checkbox.dataset.skill=row.name;checkbox.checked=selection.has(row.name);checkbox.disabled=!row.installed||busy;checkbox.setAttribute('aria-label','选择 '+row.name);checkbox.title=row.installed?'选择 '+row.name:'已经卸载，无需重复选择';checkbox.onchange=()=>{selection=M.toggleSelection(selection,[row.name],checkbox.checked);syncSelection()};pick.append(checkbox);const name=make('td'),status=make('td'),action=make('td','row-action'),usage=make('td','usage-cell'),source=make('td','source-cell');name.append(nameButton(row.name));status.append(badge(row.status));fillUsageCell(usage,row);source.title=row.source_detail||'提供该技能的插件或本地安装方式';source.append(make('span','',row.source));if(row.source_type)source.append(make('span','source-type',row.source_type));if(canRemove(row)){const button=make('button','remove-button',row.management.kind==='plugin'?'卸载插件':'卸载');button.disabled=busy;button.onclick=()=>previewUninstall([row.name]);action.append(button)}else if(row.installed){const managed=(row.management?.reason||'').includes('内置');const note=make(managed?'span':'button','managed-note',managed?'由 Codex 管理':'查看说明');note.title=row.management?.reason||'请在 Codex 中管理';if(managed){note.tabIndex=0;note.setAttribute('aria-label','由 Codex 管理：'+note.title)}else note.onclick=()=>transition({type:'DETAIL',name:row.name},true);action.append(note)}else action.append(make('span','protected-note','—'));tr.append(pick,name,make('td','category-cell',row.category),status,make('td','purpose-cell',row.purpose),usage,source,action)}
-   else{const at=make('td','event-time'),name=make('td');at.append(make('span','event-time-value',timeText(row.time)),make('span','time-kind '+row.time_kind,row.time_label));name.append(nameButton(row.name,row.id));tr.append(at,name,make('td','category-cell',row.category),make('td','history-action',row.action_label||row.action),make('td','history-summary',row.description||row.detail))}
+   if(state.view==='skills'){const pick=make('td','pick-cell'),checkbox=make('input');checkbox.type='checkbox';checkbox.dataset.skill=row.name;checkbox.checked=selection.has(row.name);checkbox.disabled=!row.installed||busy;checkbox.setAttribute('aria-label','选择 '+removalName(row.name));checkbox.title=row.installed?'选择 '+removalName(row.name):'已经卸载，无需重复选择';checkbox.onchange=()=>{selection=M.toggleSelection(selection,[row.name],checkbox.checked);syncSelection()};pick.append(checkbox);const name=make('td'),status=make('td'),action=make('td','row-action'),usage=make('td','usage-cell'),source=make('td','source-cell');name.append(nameButton(row.name));status.append(badge(row.status));fillUsageCell(usage,row);source.title=row.source_detail||'提供该技能的插件或本地安装方式';source.append(make('span','',row.source));if(row.source_type)source.append(make('span','source-type',row.source_type));if(canRemove(row)){const button=make('button','remove-button',row.management.kind==='plugin'?'卸载插件':'卸载');button.disabled=busy;button.onclick=()=>previewUninstall([row.name]);action.append(button)}else if(row.installed){const managed=(row.management?.reason||'').includes('内置');const note=make(managed?'span':'button','managed-note',managed?'由 Codex 管理':'查看说明');note.title=row.management?.reason||'请在 Codex 中管理';if(managed){note.tabIndex=0;note.setAttribute('aria-label','由 Codex 管理：'+note.title)}else note.onclick=()=>transition({type:'DETAIL',name:row.name},true);action.append(note)}else action.append(make('span','protected-note','—'));tr.append(pick,name,make('td','category-cell',M.scopeLabel(row)),status,make('td','purpose-cell',row.purpose),usage,source,action)}
+   else{const at=make('td','event-time'),name=make('td');at.append(make('span','event-time-value',timeText(row.time)),make('span','time-kind '+row.time_kind,row.time_label));name.append(nameButton(row.name,row.id));tr.append(at,name,make('td','category-cell',M.scopeLabel(row)),make('td','history-action',row.action_label||row.action),make('td','history-summary',row.description||row.detail))}
    tbody.append(tr)
   }
   if(!rows.length){const tr=make('tr'),td=make('td','empty');td.colSpan=state.view==='skills'?8:5;td.append(make('strong','','没有匹配的记录'),document.createTextNode(M.dateError(state)||'当前分类下没有符合筛选条件的记录。'));const clear=make('button','','清空当前页筛选');clear.onclick=()=>transition({type:'CLEAR'});td.append(make('br'),clear);tr.append(td);tbody.append(tr)}
   syncSelection();
-  const parts=[state.category||'全部分类',state.view==='skills'?(state.skills.status||'全部状态'):(state.logs.action||'全部操作')];$('count').textContent=parts.join(' · ')+' · '+rows.length+(state.view==='skills'?' 项技能':' 条日志');
+  const parts=[scopeCaption(state.category),state.view==='skills'?(state.skills.status||'全部状态'):(state.logs.action||'全部操作')];$('count').textContent=parts.join(' · ')+' · '+rows.length+(state.view==='skills'?' 项技能':' 条日志');
   $('skills-tab').classList.toggle('active',state.view==='skills');$('logs-tab').classList.toggle('active',state.view==='logs');$('skills-tab').setAttribute('aria-selected',state.view==='skills');$('logs-tab').setAttribute('aria-selected',state.view==='logs');
   $('table-scroll').scrollTop=state.scroll[state.view]
  }
  function syncSelection(){
   selection=M.pruneSelection(selection,data.skills);const shown=state.view==='skills'?M.select(data,state).filter(M.installed):[],selectedShown=shown.filter(row=>selection.has(row.name)).length,all=data.skills.filter(M.installed);
   $('selection-tools').hidden=state.view!=='skills';$('bulk-remove').hidden=state.view!=='skills';$('bulk-remove').disabled=!selection.size||busy;$('bulk-remove').textContent='卸载所选'+(selection.size?'（'+selection.size+'）':'');
-  $('select-visible').disabled=!shown.length||busy;$('select-visible').textContent='全选当前结果（'+shown.length+'）';$('select-installed').disabled=!all.length||busy;$('select-installed').textContent='全选全部已安装（'+all.length+'）';$('clear-selection').disabled=!selection.size||busy;
+  $('select-visible').disabled=!shown.length||busy;$('select-visible').textContent=(shown.length&&selectedShown===shown.length?'取消当前结果选择':'全选当前结果')+'（'+shown.length+'）';$('select-installed').disabled=!all.length||busy;$('select-installed').textContent=(all.length&&all.every(r=>selection.has(r.name))?'取消全部选择':'全选全部已安装')+'（'+all.length+'）';$('clear-selection').disabled=!selection.size||busy;
   $('selection-summary').textContent=selection.size?'已选 '+selection.size+' 项'+(selection.size>selectedShown?' · 其中 '+(selection.size-selectedShown)+' 项不在当前列表':''):'尚未选择技能';
-  const header=$('select-all');if(header){header.checked=shown.length>0&&selectedShown===shown.length;header.indeterminate=selectedShown>0&&selectedShown<shown.length;header.disabled=!shown.length||busy}
+  const header=$('select-all');if(header){header.checked=shown.length>0&&selectedShown===shown.length;header.indeterminate=selectedShown>0&&selectedShown<shown.length;header.disabled=!shown.length||busy;header.title=header.checked?'取消当前结果选择':'全选当前结果中的已安装技能';header.setAttribute('aria-label',header.title)}
   const byName=skillMap();for(const tr of $('body').children){const input=tr.children[0]?.children[0];if(input?.dataset?.skill){input.checked=selection.has(input.dataset.skill);input.disabled=busy||!byName.get(input.dataset.skill)?.installed}}
  }
  function renderDetail(){
   const context=state.detail,dialog=$('detail');if(!context){if(dialog.open)dialog.close();return}
   const skill=skillMap().get(context.name);if(!skill){if(dialog.open)dialog.close();return}
-  $('detail-title').textContent=skill.name;const body=$('detail-body');body.replaceChildren();
+  $('detail-title').textContent=displayName(skill.name);const body=$('detail-body');body.replaceChildren();
   const selectedEvent=context.eventId?data.events.find(e=>e.id===context.eventId):null;
   if(selectedEvent){const panel=make('section','event-panel');panel.append(make('strong','',selectedEvent.action_label||selectedEvent.action),make('p','',timeText(selectedEvent.time)+' · '+selectedEvent.time_label),make('p','',selectedEvent.description||selectedEvent.detail));body.append(panel)}
   const dl=make('dl'),lifecycle=skill.lifecycle||{};
   const installation=lifecycle.installed_at?timeText(lifecycle.installed_at)+'（操作时间）':lifecycle.present_at_baseline?'未记录，建账前已存在':'未记录';
-  const fields=[['安装状态',skill.status],['分类',skill.category],['用途',skill.purpose],['技能来源',skill.source],['来源说明',skill.source_detail||'提供该技能的插件或本地安装方式'],['安装时间',installation]];
+  const fields=[['安装状态',skill.status],['所属范围',M.scopeLabel(skill)],...(skill.scope_path?[['项目目录',skill.scope_path],['适用说明','此处表示该目录本地安装的技能；Codex 是否加载取决于工作目录到仓库根的查找范围。全局技能另列。']]:[['适用说明','用户级或插件 / 内置技能，可跨项目使用；实际可用性仍取决于启用配置与连接。']]),['用途',skill.purpose],['技能来源',skill.source],['来源说明',skill.source_detail||'提供该技能的插件或本地安装方式'],['安装时间',installation]];
   if(skill.installed)fields.splice(1,0,['启用设置',skill.raw_status==='已停用'?'已关闭；文件仍安装在本机':'已开启']);
   else fields.splice(1,0,['卸载说明',skill.raw_status==='已归档'?'已移出安装目录，另有恢复备份':'安装目录中已无该技能']);
   if(lifecycle.first_detected_at)fields.push(['首次发现',timeText(lifecycle.first_detected_at)+'（检测时间）']);
@@ -200,6 +208,7 @@ if(typeof document!=='undefined')(()=>{
   if(!dialog.open)dialog.showModal()
  }
  function render(){
+  if(data.discovery&&state.category&&!scopeMap().has(state.category))state.category='';
   rendering=true;buildHead();syncControls();renderCategories();renderRows();renderDetail();$('last-scan').textContent=timeText(data.updated);rendering=false
  }
  function closeDetail(){if(history.state?.detailEntry)history.back();else transition({type:'CLOSE_DETAIL'})}
@@ -217,18 +226,18 @@ if(typeof document!=='undefined')(()=>{
   const body=$('remove-body');body.replaceChildren();const chosen=new Set(value.selected_names||names),extra=value.extra_names||value.groups.flatMap(g=>g.names).filter(n=>!chosen.has(n));
   body.append(make('p','remove-summary','已选 '+chosen.size+' 项 · 实际卸载 '+value.count+' 项'+(extra.length?' · 另含 '+extra.length+' 项连带技能':'')+(value.blocked.length?' · '+value.blocked.length+' 项不执行':'')));
   for(const group of value.groups){const section=make('section','remove-group');section.append(make('strong','',group.kind==='plugin'?'整个插件 · '+group.key.split('@')[0]:'本地技能'));
-   for(const name of group.names){const row=make('div','remove-skill-row');row.append(make('span','remove-skill-name',name),make('span','scope-tag'+(chosen.has(name)?'':' extra'),chosen.has(name)?'已选':'连带移除'));section.append(row)}
+   for(const name of group.names){const row=make('div','remove-skill-row');row.append(make('span','remove-skill-name',removalName(name)),make('span','scope-tag'+(chosen.has(name)?'':' extra'),chosen.has(name)?'已选':'连带移除'));section.append(row)}
    section.append(make('p','impact-note',group.kind==='plugin'?'此操作同时卸载该插件及其连接能力。':'将移出安装目录；恢复备份保留在本机。'));body.append(section)
   }
-  if(value.blocked.length){const section=make('section','blocked-group');section.append(make('strong','','以下项目不执行卸载'));for(const row of value.blocked){const line=make('div','blocked-item');line.append(make('span','remove-skill-name',row.name),make('span','',row.reason));section.append(line)}body.append(section)}
+  if(value.blocked.length){const section=make('section','blocked-group');section.append(make('strong','','以下项目不执行卸载'));for(const row of value.blocked){const line=make('div','blocked-item');line.append(make('span','remove-skill-name',removalName(row.name)),make('span','',row.reason));section.append(line)}body.append(section)}
   if(value.count&&(extra.length||value.groups.some(g=>g.kind==='plugin'))){const label=make('label','impact-ack'),input=make('input');input.type='checkbox';input.id='remove-ack';input.onchange=planReady;label.append(input,make('span','','我已核对以上范围，同意同时移除列出的插件及连带技能。'));body.append(label)}
   $('remove-confirm').textContent=value.count?'确认卸载 '+value.count+' 项':'没有可卸载项目';
  }
  function renderResult(result){
   const body=$('remove-body'),success=new Set(result.results.filter(r=>r.ok).flatMap(r=>r.names)),failed=new Set(result.results.filter(r=>!r.ok).flatMap(r=>r.names));
   body.replaceChildren(make('p','remove-summary','已卸载 '+success.size+' 项'+(failed.size?' · 失败 '+failed.size+' 项':'')+(result.blocked?.length?' · 未执行 '+result.blocked.length+' 项':'')));
-  for(const group of result.results){const section=make('section','remove-group');for(const name of group.names){const row=make('div','remove-skill-row');row.append(make('span','remove-skill-name',name),make('span','result-tag '+(group.ok?'success':'failure'),group.ok?'已卸载':'卸载失败'));section.append(row)}if(!group.ok)section.append(make('p','error-message',group.error||'未完成卸载，请重新检查。'));body.append(section)}
-  if(result.blocked?.length){const section=make('section','blocked-group');for(const row of result.blocked)section.append(make('p','',row.name+' · 未执行：'+row.reason));body.append(section)}
+  for(const group of result.results){const section=make('section','remove-group');for(const name of group.names){const row=make('div','remove-skill-row');row.append(make('span','remove-skill-name',removalName(name)),make('span','result-tag '+(group.ok?'success':'failure'),group.ok?'已卸载':'卸载失败'));section.append(row)}if(!group.ok)section.append(make('p','error-message',group.error||'未完成卸载，请重新检查。'));body.append(section)}
+  if(result.blocked?.length){const section=make('section','blocked-group');for(const row of result.blocked)section.append(make('p','',removalName(row.name)+' · 未执行：'+row.reason));body.append(section)}
   for(const name of success)selection.delete(name);for(const row of result.blocked||[])selection.delete(row.name);return {success:success.size,failed:failed.size}
  }
  async function previewUninstall(names){
@@ -239,8 +248,8 @@ if(typeof document!=='undefined')(()=>{
   }catch(error){$('remove-body').replaceChildren(make('p','error-message',error.message));if(connection&&location.protocol==='file:'){const link=make('a','action-button','打开本机管理页面');link.href=connection.url+'/'+M.hash(state)+'&access='+encodeURIComponent(connection.token);$('remove-body').append(link)}}
   finally{busy=false;planReady();syncSelection()}
  }
- $('select-visible').onclick=()=>{selection=M.toggleSelection(selection,M.select(data,state).filter(M.installed).map(r=>r.name),true);syncSelection()};
- $('select-installed').onclick=()=>{selection=M.toggleSelection(selection,data.skills.filter(M.installed).map(r=>r.name),true);syncSelection()};
+ $('select-visible').onclick=()=>{if(busy)return;selection=M.toggleScope(selection,M.select(data,state).filter(M.installed).map(r=>r.name));syncSelection()};
+ $('select-installed').onclick=()=>{if(busy)return;selection=M.toggleScope(selection,data.skills.filter(M.installed).map(r=>r.name));syncSelection()};
  $('clear-selection').onclick=()=>{selection.clear();syncSelection()};
  $('bulk-remove').onclick=()=>previewUninstall([...selection]);
  $('remove-close').onclick=()=>{if(!busy)$('remove-dialog').close()};$('remove-dialog').addEventListener('cancel',event=>{if(busy)event.preventDefault()});
@@ -262,9 +271,34 @@ if(typeof document!=='undefined')(()=>{
  window.addEventListener('popstate',event=>{state=M.normalize(event.state?.skillLedger?event.state.state:M.fromHash(location.hash,M.defaults()));headerSignature='';remember();render()});
  window.SkillLedgerReceive=next=>{
   if(!next||!Array.isArray(next.skills)||!Array.isArray(next.events))return;
+  const before=new Set(data.skills.filter(M.installed).map(r=>r.name)),added=next.skills.filter(r=>r.installed&&!before.has(r.name));
   const changed=next.revision!==data.revision;data=prepare(next);
+  if(next.monitor?.status?.includes('扫描失败'))notice('后台扫描未完成，当前显示上次成功的清单：'+(next.monitor.error||'请检查扫描范围。'),true);
+  if(added.length)notice('发现 '+added.length+' 项新安装技能，已归入：'+[...new Set(added.map(M.scopeLabel))].join('、')+'。当前筛选可能隐藏新项目，可清空筛选查看。');
   if(changed){state.scroll[state.view]=$('table-scroll').scrollTop;headerSignature='';render()}else $('last-scan').textContent=timeText(data.updated)
  };
+ function scanDetails(){
+  const body=$('scan-body');body.replaceChildren();const info=data.discovery||{};
+  body.append(make('p','usage-help','按安装目录归属分类。项目视图仅列本地安装，全局技能单独查看。数量随当前筛选变化。新技能约 15 秒检查，新项目目录约 30 秒发现。'));
+  body.append(make('h3','','全局技能目录'));body.append(make('p','scan-path','用户 .agents/skills、Codex skills，以及已确认安装的插件。'));
+  body.append(make('h3','','项目发现范围'));
+  for(const root of info.roots||[])body.append(make('p','scan-path',typeof root==='string'?root:root.path));
+  if(!info.roots?.length)body.append(make('p','usage-note','尚未添加项目扫描范围。请在下方添加项目或项目集合文件夹。'));
+  body.append(make('p','usage-help','只在以上目录内查找 .agents/skills，默认最多 '+(info.depth||6)+' 层；跳过依赖、缓存和链接目录。范围以外的新项目需在下方添加。'));
+  if(info.checked_epoch)body.append(make('p','usage-help','最近项目检查：'+new Date(info.checked_epoch*1000).toLocaleString('zh-CN')));
+  for(const warning of info.warnings||[])body.append(make('p','usage-note',warning));
+ }
+ async function refreshScope(route,body){
+  const refresh=$('scan-refresh'),add=$('scan-add');refresh.disabled=true;add.disabled=true;$('scan-status').textContent='正在检查项目与技能…';
+  try{const result=await request(route,body);window.SkillLedgerReceive(result.data);scanDetails();$('scan-status').textContent='检查完成，清单已同步。';if(route==='/api/projects')$('scan-path').value=''}
+  catch(error){$('scan-status').textContent=error.message}
+  finally{refresh.disabled=false;add.disabled=false}
+ }
+ if($('scan-button')){
+  $('scan-button').onclick=()=>{scanDetails();$('scan-status').textContent='';$('scan-dialog').showModal()};$('scan-close').onclick=()=>$('scan-dialog').close();
+  $('scan-refresh').onclick=()=>refreshScope('/api/scan/refresh',{});
+  $('scan-add').onclick=()=>{const path=$('scan-path').value.trim();if(!path){$('scan-status').textContent='先填写项目文件夹绝对路径。';return}refreshScope('/api/projects',{path,collection:Boolean($('scan-collection')?.checked)})};
+ }
  window.SkillLedgerConnect=value=>{if(value&&/^http:\/\/127\.0\.0\.1:\d+$/.test(value.url)&&typeof value.token==='string')connection=value};
  function poll(){if(connection){request('/api/data').then(window.SkillLedgerReceive).catch(()=>{if(location.protocol==='http:')notice('后台连接中断，请重新打开台账。',true);else connection=null});return}if(location.protocol==='http:')return;for(const file of ['connection.js','live-data.js']){const script=make('script');script.src='.data/'+file+'?t='+Date.now();script.onload=()=>script.remove();script.onerror=()=>script.remove();document.head.append(script)}}
  writeHistory(false,false);render();if(!window.__SKILL_LEDGER_TEST__){poll();setInterval(poll,15000);window.addEventListener('focus',poll)}

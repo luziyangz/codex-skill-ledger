@@ -46,7 +46,8 @@ def configured(base):
         catalog=L.read_json(path)
         settings['known_plugins']=sorted(set(settings.get('known_plugins',[]))|{r['name'] for r in catalog.get('installed',[])})
         settings['plugin_ids']={r['id'] for r in catalog.get('installed',[])}
-    return settings
+    import skill_scope
+    return skill_scope.discover(base,settings)
 
 def capability(row,settings):
     if not row or row.get('state')=='缓存待核对':return {'kind':'none','reason':'当前未安装，无需卸载。'}
@@ -184,7 +185,10 @@ def serve(base,catalog=True):
             if route=='/':return self.reply(200,(base/'查看记录.html').read_text(encoding='utf-8'),'text/html; charset=utf-8')
             if route=='/api/data' and self.authorized():
                 script=(base/'.data'/'live-data.js').read_text(encoding='utf-8')
-                return self.reply(200,json.loads(script.removeprefix('window.SkillLedgerReceive && window.SkillLedgerReceive(').removesuffix(');\n')))
+                value=json.loads(script.removeprefix('window.SkillLedgerReceive && window.SkillLedgerReceive(').removesuffix(');\n'))
+                monitor=base/'.data'/'monitor.json'
+                if monitor.exists():value['monitor']=L.read_json(monitor)
+                return self.reply(200,value)
             return self.reply(403 if route.startswith('/api/') else 404,{'error':'请求不可用。'})
         def do_POST(self):
             if not self.authorized():return self.reply(403,{'error':'管理连接无效，请重新打开台账。'})
@@ -192,7 +196,15 @@ def serve(base,catalog=True):
                 size=int(self.headers.get('Content-Length','0'))
                 if size<1 or size>65536 or self.headers.get('Content-Type','').split(';')[0]!='application/json':raise ValueError('请求格式不正确。')
                 body=json.loads(self.rfile.read(size));route=urlsplit(self.path).path
-                if route=='/api/uninstall/preview':result=manager.preview(body.get('names'))
+                if route in ('/api/scan/refresh','/api/projects'):
+                    import skill_scope
+                    with L.locked(base):
+                        if route=='/api/projects':skill_scope.add_project(base,body.get('path',''),body.get('collection',False))
+                        else:skill_scope.invalidate(base)
+                    L.update(base,False)
+                    script=(base/'.data'/'live-data.js').read_text(encoding='utf-8')
+                    result={'data':json.loads(script.removeprefix('window.SkillLedgerReceive && window.SkillLedgerReceive(').removesuffix(');\n'))}
+                elif route=='/api/uninstall/preview':result=manager.preview(body.get('names'))
                 elif route=='/api/uninstall/commit':result=manager.commit(body.get('id'))
                 else:return self.reply(404,{'error':'请求不可用。'})
                 self.reply(200,result)

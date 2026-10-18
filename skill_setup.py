@@ -24,9 +24,9 @@ def defaults(home=None, codex_home=None):
     roots = [(codex / 'skills', '用户 .codex / 系统技能'),
              (home / '.agents' / 'skills', '用户 .agents 技能')]
     return {'codex_config': str(config), 'codex_config_required': config.is_file(),
-            'skill_roots': [{'path': str(path), 'label': label, 'required': path.is_dir()} for path, label in roots],
+            'skill_roots': [{'path': str(path), 'label': label, 'required': path.is_dir(), 'scope':'global'} for path, label in roots],
             'plugin_cache': str(cache), 'plugin_cache_required': cache.is_dir(),
-            'known_plugins': [], 'plugin_cli': candidate}
+            'known_plugins': [], 'plugin_cli': candidate, 'project_scan_roots':[], 'project_scan_depth':6}
 
 
 def category_reference():

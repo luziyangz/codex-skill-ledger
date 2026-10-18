@@ -64,7 +64,7 @@ def invocation_info(row,frontmatter_reader=None):
         if frontmatter_reader:
             try:
                 declared,candidate_description,_=frontmatter_reader(skill)
-                if row.get('name') and declared!=row['name'].split(':',1)[-1]:continue
+                if row.get('name') and declared!=row.get('skill_name',row['name']).split(':',1)[-1]:continue
             except (OSError,ValueError,UnicodeError):continue
         copies.append(read_policy(skill))
         if not description:description=candidate_description

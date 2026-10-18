@@ -1,3 +1,3 @@
 @echo off
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\manage.ps1" -Action Open
+powershell.exe -NoProfile -File "%~dp0scripts\manage.ps1" -Action Open
 if errorlevel 1 pause

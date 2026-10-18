@@ -1,52 +1,69 @@
-﻿param([ValidateSet('Open','Start','InstallStartup','StopRemove')][string]$Action='Open')
+[CmdletBinding(SupportsShouldProcess=$true)]
+param([ValidateSet('Open','Start','InstallStartup','StopRemove')][string]$Action='Open')
 $ErrorActionPreference='Stop'
+. (Join-Path $PSScriptRoot 'startup-plan.ps1')
+. (Join-Path $PSScriptRoot 'python-runtime.ps1')
 $toolDirectory=[IO.Path]::GetFullPath((Split-Path -Parent $PSScriptRoot))
 $scriptPath=Join-Path $toolDirectory 'skill_ledger.py'
-$hashProvider=[Security.Cryptography.SHA256]::Create()
-try {$installId=([BitConverter]::ToString($hashProvider.ComputeHash([Text.Encoding]::UTF8.GetBytes($toolDirectory.ToLowerInvariant())))).Replace('-','').Substring(0,10)} finally {$hashProvider.Dispose()}
 $startupDirectory=[Environment]::GetFolderPath('Startup')
-$shortcutPath=[IO.Path]::GetFullPath((Join-Path $startupDirectory ('Codex Skill Ledger '+$installId+'.lnk')))
-if([IO.Path]::GetDirectoryName($shortcutPath) -ne [IO.Path]::GetFullPath($startupDirectory)){throw 'Invalid startup path.'}
+if(-not $startupDirectory){throw 'Windows Startup directory is unavailable.'}
 
 if($Action -eq 'StopRemove'){
+    $shell=New-Object -ComObject WScript.Shell
+    $hash=[Security.Cryptography.SHA256]::Create()
+    try {$id=([BitConverter]::ToString($hash.ComputeHash([Text.Encoding]::UTF8.GetBytes($toolDirectory.ToLowerInvariant())))).Replace('-','').Substring(0,10)} finally {$hash.Dispose()}
+    foreach($name in @(('Codex Skill Ledger '+$id+'.lnk'),'Codex Skill Ledger.lnk')){
+        $path=Join-Path $startupDirectory $name
+        if(Test-Path -LiteralPath $path){
+            $shortcut=$shell.CreateShortcut($path)
+            if(Test-SkiluneStartupOwnership $shortcut $toolDirectory){
+                if($PSCmdlet.ShouldProcess($path,'Remove this installation startup entry')){Remove-Item -LiteralPath $path}
+            }else{Write-Warning ('Unrelated startup entry retained: '+$path)}
+        }
+    }
     $statusPath=Join-Path $toolDirectory '.data\connection.json'
     if(Test-Path -LiteralPath $statusPath){
         $status=Get-Content -LiteralPath $statusPath -Raw -Encoding UTF8|ConvertFrom-Json
         $monitor=Get-CimInstance Win32_Process -Filter ('ProcessId = '+[int]$status.pid) -ErrorAction SilentlyContinue
-        if($monitor -and $monitor.CommandLine -and $monitor.CommandLine.Contains($scriptPath) -and $monitor.CommandLine.Contains('--watch')){Stop-Process -Id ([int]$status.pid)}
+        if($monitor -and $monitor.CommandLine -and $monitor.CommandLine.Contains(('"'+$scriptPath+'"')) -and $monitor.CommandLine.Contains('--watch')){
+            if($PSCmdlet.ShouldProcess(('Process '+$status.pid),'Stop this installation recorder')){Stop-Process -Id ([int]$status.pid)}
+        }
     }
-    if(Test-Path -LiteralPath $shortcutPath){
-        $shell=New-Object -ComObject WScript.Shell
-        $shortcut=$shell.CreateShortcut($shortcutPath)
-        if(-not $shortcut.Arguments.Contains((Join-Path $PSScriptRoot 'manage.ps1'))){throw 'Shortcut belongs to another installation.'}
-        Remove-Item -LiteralPath $shortcutPath
-    }
-    Write-Host 'Background recording stopped; startup removed. Records are retained.'
-    exit
+    if(-not $WhatIfPreference){Write-Host 'Background recording stopped; owned startup entries removed. Records are retained.'}
+    return
 }
 
+$runtime=Get-SkilunePython
+# Validate all paths before creating anything. This call has no side effects.
+$plan=Get-SkiluneStartupPlan $toolDirectory $runtime $startupDirectory
 if($Action -eq 'InstallStartup'){
+    Write-Host ('Program: '+$plan.TargetPath)
+    Write-Host ('Arguments: '+$plan.Arguments)
+    Write-Host ('Startup entry: '+$plan.Path)
+    if($WhatIfPreference){
+        [void]$PSCmdlet.ShouldProcess($plan.Path,'Create a direct local Python startup entry')
+        return
+    }
     $shell=New-Object -ComObject WScript.Shell
-    $shortcut=$shell.CreateShortcut($shortcutPath)
-    $shortcut.TargetPath=Join-Path $PSHOME 'powershell.exe'
-    $shortcut.Arguments='-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "{0}" -Action Start' -f (Join-Path $PSScriptRoot 'manage.ps1')
-    $shortcut.WorkingDirectory=$toolDirectory
-    $shortcut.WindowStyle=7
-    $shortcut.Description='Skilune · 技序'
+    if(Test-Path -LiteralPath $plan.Path){
+        $existing=$shell.CreateShortcut($plan.Path)
+        if(-not(Test-SkiluneStartupOwnership $existing $toolDirectory)){throw 'Shortcut belongs to another installation.'}
+    }
+    if(-not $PSCmdlet.ShouldProcess($plan.Path,'Create a direct local Python startup entry')){return}
+    $shortcut=$shell.CreateShortcut($plan.Path)
+    $shortcut.TargetPath=$plan.TargetPath
+    $shortcut.Arguments=$plan.Arguments
+    $shortcut.WorkingDirectory=$plan.WorkingDirectory
+    $shortcut.Description=$plan.Description
+    $icon=Join-Path $toolDirectory 'brand\app.ico'
+    if(Test-Path -LiteralPath $icon){$shortcut.IconLocation=$icon+',0'}
     $shortcut.Save()
-    Write-Host 'Startup recording enabled for the current user. Starting now.'
+    $verify=$shell.CreateShortcut($plan.Path)
+    if($verify.TargetPath -ne $plan.TargetPath -or $verify.Arguments -ne $plan.Arguments -or $verify.WorkingDirectory -ne $plan.WorkingDirectory){throw 'Startup entry verification failed.'}
+    Write-Host 'Startup enabled for the current user. Starting local recording.'
 }
-
-$runtime=$null
-foreach($name in @('pythonw.exe','python.exe','python3.exe')){
-    $candidate=Get-Command $name -ErrorAction SilentlyContinue
-    if($candidate -and $candidate.Source -notlike '*\WindowsApps\*'){$runtime=$candidate.Source;break}
-}
-if(-not $runtime){
-    $candidate=Join-Path $HOME '.cache\codex-runtimes\codex-primary-runtime\dependencies\python\pythonw.exe'
-    if(Test-Path -LiteralPath $candidate){$runtime=$candidate}
-}
-if(-not $runtime){throw 'Python 3.11+ was not found. Install Python and add it to PATH.'}
-$arguments='"{0}" --watch --quiet' -f $scriptPath
+$arguments=$plan.Arguments
 if($Action -eq 'Open'){$arguments='"{0}"' -f (Join-Path $toolDirectory 'launch.py')}
-Start-Process -FilePath $runtime -ArgumentList $arguments -WorkingDirectory $toolDirectory -WindowStyle Hidden
+if($PSCmdlet.ShouldProcess($runtime+' '+$arguments,'Start local Skilune')){
+    Start-Process -FilePath $runtime -ArgumentList $arguments -WorkingDirectory $toolDirectory
+}

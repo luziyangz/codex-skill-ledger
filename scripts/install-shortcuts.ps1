@@ -3,16 +3,8 @@ $ErrorActionPreference='Stop'
 $toolDirectory=[IO.Path]::GetFullPath($ToolDirectory)
 $launcher=Join-Path $toolDirectory 'launch.py'
 if(-not(Test-Path -LiteralPath $launcher)){throw 'launch.py is missing.'}
-$runtime=$null
-foreach($name in @('pythonw.exe','python.exe','python3.exe')){
-    $candidate=Get-Command $name -ErrorAction SilentlyContinue
-    if($candidate -and $candidate.Source -notlike '*\WindowsApps\*'){$runtime=$candidate.Source;break}
-}
-if(-not $runtime){
-    $candidate=Join-Path $HOME '.cache\codex-runtimes\codex-primary-runtime\dependencies\python\pythonw.exe'
-    if(Test-Path -LiteralPath $candidate){$runtime=$candidate}
-}
-if(-not $runtime){throw 'Python 3.11+ was not found.'}
+. (Join-Path $PSScriptRoot 'python-runtime.ps1')
+$runtime=Get-SkilunePython
 $desktop=[Environment]::GetFolderPath([Environment+SpecialFolder]::DesktopDirectory,[Environment+SpecialFolderOption]::DoNotVerify)
 $programs=[Environment]::GetFolderPath([Environment+SpecialFolder]::Programs,[Environment+SpecialFolderOption]::DoNotVerify)
 $shell=New-Object -ComObject WScript.Shell

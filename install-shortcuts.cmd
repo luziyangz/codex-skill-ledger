@@ -1,3 +1,3 @@
 @echo off
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\install-shortcuts.ps1"
+powershell.exe -NoProfile -File "%~dp0scripts\install-shortcuts.ps1"
 pause

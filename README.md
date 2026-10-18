@@ -77,7 +77,7 @@
 - 本机有 Codex 技能目录；插件管理还需要可用的 Codex 插件 CLI。
 - Node.js 只用于运行前端测试，日常使用不需要。
 
-脚本会依次寻找 PATH 中的 Python 和当前用户目录下 Codex 附带的 Python 运行环境。找不到时，安装 Python 3.11+ 并加入 PATH。
+脚本会依次检查 PATH 中的 Python 和当前用户目录下 Codex 附带的 Python 运行环境，跳过 Windows 应用商店占位入口和低于 3.11 的版本。找不到时，安装 Python 3.11+ 并加入 PATH。
 
 ## 快速开始
 
@@ -114,13 +114,21 @@ python skill_ledger.py --watch --open
 
 ### 开机后自动后台记录
 
-双击 `install-startup.cmd`。它会为当前用户创建启动快捷方式并立即启动后台记录。
+双击 `install-startup.cmd`。安装器先检查本地 Python 和程序文件，再显示实际程序、参数与启动入口路径；创建后复核入口并立即启动后台记录。登录入口直接运行本地 Python 与 `skill_ledger.py`，不再通过隐藏 PowerShell 或跳过执行策略启动，也不下载启动组件。
+
+如只想检查计划，可在 PowerShell 中执行以下命令：只检查 Python 版本与文件，不创建入口、不启动后台记录器。
+
+```powershell
+.\scripts\manage.ps1 -Action InstallStartup -WhatIf
+```
+
+所有 CMD 入口遵循当前 Windows PowerShell 执行策略；若系统策略阻止脚本执行，应由设备管理者核对或签名脚本，工具不修改策略。
 
 这里的「开机启动」是 **Windows 用户登录后启动**，无需管理员权限，也不依赖 Codex 窗口是否打开。只有电脑运行且用户已登录、后台进程存活时才会持续记录。
 
 双击 `stop-and-remove-startup.cmd` 可停止本目录的后台记录器，并移除本目录创建的启动快捷方式；已有记录和恢复备份保留。
 
-旧版本曾创建 `Startup/Codex Skill Ledger.lnk`。如果安全软件删除了这个入口，会影响下次登录时自动启动；当前运行的记录器和手动入口是独立的。请保留拦截结果，复核前不要恢复被删除的快捷方式或添加例外，也不能仅凭仓库源码认定误报。可先使用 `open.cmd` 手动打开。
+旧版本曾创建 `Startup/Codex Skill Ledger.lnk`，或带安装目录标识的同名入口。如果安全软件删除了入口，会影响下次登录时自动启动；当前运行的记录器和手动入口是独立的。此次源码升级不会恢复被拦截的入口，也不会自动重新注册启动项。请保留拦截结果，安全复核前不要恢复入口、添加例外或重新安装登录启动；不能仅凭仓库源码认定误报，也不能保证修改后一定通过安全软件检测。可先使用桌面入口或 `open.cmd` 手动打开。
 
 移动工具目录后，应先在原目录取消启动，再在新目录重新设置。
 
@@ -226,6 +234,8 @@ skill_scope.py            安装作用域、项目发现与历史归属迁移
 launch.py                 固定入口：检查连接、按需启动后台并打开浏览器
 web/                     界面模板与交互脚本
 scripts/manage.ps1       Windows 后台和启动快捷方式管理
+scripts/startup-plan.ps1 无副作用的启动计划与快捷方式归属核验
+scripts/python-runtime.ps1  查找并验证本地 Python 3.11+ 运行环境
 scripts/install-shortcuts.ps1  创建桌面与开始菜单入口
 tests/                   临时数据测试与前端交互测试
 ```

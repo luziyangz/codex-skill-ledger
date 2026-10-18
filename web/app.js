@@ -174,9 +174,9 @@ if(typeof document!=='undefined')(()=>{
   $('table-scroll').scrollTop=state.scroll[state.view]
  }
  function syncSelection(){
-  selection=M.pruneSelection(selection,data.skills);const shown=state.view==='skills'?M.select(data,state).filter(M.installed):[],selectedShown=shown.filter(row=>selection.has(row.name)).length,all=data.skills.filter(M.installed);
+  selection=M.pruneSelection(selection,data.skills);const shown=state.view==='skills'?M.select(data,state).filter(M.installed):[],selectedShown=shown.filter(row=>selection.has(row.name)).length;
   $('selection-tools').hidden=state.view!=='skills';$('bulk-remove').hidden=state.view!=='skills';$('bulk-remove').disabled=!selection.size||busy;$('bulk-remove').textContent='卸载所选'+(selection.size?'（'+selection.size+'）':'');
-  $('select-visible').disabled=!shown.length||busy;$('select-visible').textContent=(shown.length&&selectedShown===shown.length?'取消当前结果选择':'全选当前结果')+'（'+shown.length+'）';$('select-installed').disabled=!all.length||busy;$('select-installed').textContent=(all.length&&all.every(r=>selection.has(r.name))?'取消全部选择':'全选全部已安装')+'（'+all.length+'）';$('clear-selection').disabled=!selection.size||busy;
+  $('select-visible').disabled=!shown.length||busy;$('select-visible').textContent=(shown.length&&selectedShown===shown.length?'取消当前结果选择':'全选当前结果')+'（'+shown.length+'）';$('clear-selection').disabled=!selection.size||busy;
   $('selection-summary').textContent=selection.size?'已选 '+selection.size+' 项'+(selection.size>selectedShown?' · 其中 '+(selection.size-selectedShown)+' 项不在当前列表':''):'尚未选择技能';
   const header=$('select-all');if(header){header.checked=shown.length>0&&selectedShown===shown.length;header.indeterminate=selectedShown>0&&selectedShown<shown.length;header.disabled=!shown.length||busy;header.title=header.checked?'取消当前结果选择':'全选当前结果中的已安装技能';header.setAttribute('aria-label',header.title)}
   const byName=skillMap();for(const tr of $('body').children){const input=tr.children[0]?.children[0];if(input?.dataset?.skill){input.checked=selection.has(input.dataset.skill);input.disabled=busy||!byName.get(input.dataset.skill)?.installed}}
@@ -249,7 +249,6 @@ if(typeof document!=='undefined')(()=>{
   finally{busy=false;planReady();syncSelection()}
  }
  $('select-visible').onclick=()=>{if(busy)return;selection=M.toggleScope(selection,M.select(data,state).filter(M.installed).map(r=>r.name));syncSelection()};
- $('select-installed').onclick=()=>{if(busy)return;selection=M.toggleScope(selection,data.skills.filter(M.installed).map(r=>r.name));syncSelection()};
  $('clear-selection').onclick=()=>{selection.clear();syncSelection()};
  $('bulk-remove').onclick=()=>previewUninstall([...selection]);
  $('remove-close').onclick=()=>{if(!busy)$('remove-dialog').close()};$('remove-dialog').addEventListener('cancel',event=>{if(busy)event.preventDefault()});

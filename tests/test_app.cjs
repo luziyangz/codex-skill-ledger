@@ -50,7 +50,7 @@ async function main(){
  get('select-visible').click();check(()=>assert.match(get('selection-summary').textContent,/已选 5 项/));
  filter('name','alpha');check(()=>assert.match(get('selection-summary').textContent,/4 项不在当前列表/));check(()=>assert.equal(pick('alpha').checked,true));
  get('select-all').checked=false;get('select-all').fire('change');check(()=>assert.match(get('selection-summary').textContent,/已选 4 项/));
- get('select-installed').click();check(()=>assert.match(get('selection-summary').textContent,/已选 5 项/));
+ get('select-visible').click();check(()=>assert.match(get('selection-summary').textContent,/已选 5 项/));
  get('logs-tab').click();get('skills-tab').click();check(()=>assert.match(get('selection-summary').textContent,/已选 5 项/));check(()=>assert.equal(get('filter-name').value,'alpha'));
  get('clear-selection').click();check(()=>assert.equal(get('bulk-remove').disabled,true));
  filter('name','plugin:demo');const input=pick('plugin:demo');input.checked=true;input.fire('change');get('bulk-remove').click();await settle();
@@ -58,12 +58,12 @@ async function main(){
  check(()=>assert.match(get('remove-body').textContent,/连带移除/));check(()=>assert.equal(get('remove-confirm').disabled,true));
  get('remove-confirm').click();check(()=>assert.equal(calls.filter(c=>c.url.endsWith('/commit')).length,0));
  get('remove-close').click();get('clear-selection').click();get('reset').click();filter('status','已安装');
- get('select-installed').click();get('bulk-remove').click();await settle();
+ get('select-visible').click();get('bulk-remove').click();await settle();
  check(()=>assert.match(get('remove-body').textContent,/已选 5 项 · 实际卸载 4 项 · 1 项不执行/));
  check(()=>assert.match(get('remove-body').textContent,/以下项目不执行卸载/));
  get('remove-ack').checked=true;get('remove-ack').fire('change');check(()=>assert.equal(get('remove-confirm').disabled,false));
  get('remove-confirm').click();await settle();
- check(()=>assert.equal(get('select-all').disabled,true));check(()=>assert.equal(get('select-installed').disabled,true));
+ check(()=>assert.equal(get('select-all').disabled,true));check(()=>assert.equal(get('select-visible').disabled,true));
  check(()=>assert.equal(pick('beta').disabled,true));check(()=>assert.match(get('remove-confirm').textContent,/正在卸载 4 项/));
  get('remove-confirm').click();check(()=>assert.equal(calls.filter(c=>c.url.endsWith('/commit')).length,1));
  release();await settle();await settle();
@@ -72,7 +72,7 @@ async function main(){
  check(()=>assert.match(get('remove-body').textContent,/beta卸载失败/));check(()=>assert.match(get('remove-body').textContent,/gamma · 未执行/));
  check(()=>assert.equal(get('remove-title').textContent,'卸载结果：部分失败'));
  check(()=>assert.equal(api.select().length,2));check(()=>assert.equal(pick('beta').checked,true));check(()=>assert.equal(pick('gamma').checked,false));
- check(()=>assert.match(get('selection-summary').textContent,/已选 1 项/));check(()=>assert.match(get('select-installed').textContent,/2/));
+ check(()=>assert.match(get('selection-summary').textContent,/已选 1 项/));check(()=>assert.match(get('select-visible').textContent,/2/));
  filter('status','已卸载');check(()=>assert.equal(api.select().length,4));check(()=>assert.equal(get('select-visible').disabled,true));
  check(()=>assert.match(get('selection-summary').textContent,/1 项不在当前列表/));
  row('old').children[1].children[0].click();check(()=>assert.ok(!get('detail-body').textContent.includes('已归档')));check(()=>assert.match(get('detail-body').textContent,/已卸载/));

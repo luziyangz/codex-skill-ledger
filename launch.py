@@ -68,7 +68,7 @@ def open_ledger(base, timeout=25):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='在默认浏览器打开技能台账，必要时启动后台。')
+    parser = argparse.ArgumentParser(description='在默认浏览器打开 Skilune，必要时启动后台。')
     parser.add_argument('--base', type=Path, default=HERE)
     args = parser.parse_args()
     try:
@@ -79,7 +79,7 @@ def main():
             print(message, file=sys.stderr)
         if os.name == 'nt':
             import ctypes
-            ctypes.windll.user32.MessageBoxW(None, message, '技能台账：打开失败', 0x10)
+            ctypes.windll.user32.MessageBoxW(None, message, 'Skilune：打开失败', 0x10)
         return 1
     return 0
 

@@ -266,7 +266,7 @@ if(typeof document!=='undefined')(()=>{
  $('detail-close').onclick=closeDetail;$('detail').addEventListener('cancel',event=>{event.preventDefault();closeDetail()});
  $('about-button').onclick=()=>$('about').showModal();$('about-close').onclick=()=>$('about').close();
  $('table-scroll').addEventListener('scroll',()=>{if(!rendering){state.scroll[state.view]=$('table-scroll').scrollTop;writeHistory(false,Boolean(state.detail))}});
- $('export').onclick=event=>{event.preventDefault();const blob=new Blob([M.csv(data,state)],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),link=make('a');link.href=url;link.download='技能台账-'+(state.view==='skills'?'技能清单':'操作日志')+'.csv';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)};
+ $('export').onclick=event=>{event.preventDefault();const blob=new Blob([M.csv(data,state)],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),link=make('a');link.href=url;link.download='Skilune-'+(state.view==='skills'?'技能清单':'操作日志')+'.csv';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)};
  window.addEventListener('popstate',event=>{state=M.normalize(event.state?.skillLedger?event.state.state:M.fromHash(location.hash,M.defaults()));headerSignature='';remember();render()});
  window.SkillLedgerReceive=next=>{
   if(!next||!Array.isArray(next.skills)||!Array.isArray(next.events))return;

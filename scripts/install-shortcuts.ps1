@@ -16,7 +16,7 @@ if(-not $runtime){throw 'Python 3.11+ was not found.'}
 $desktop=[Environment]::GetFolderPath([Environment+SpecialFolder]::DesktopDirectory,[Environment+SpecialFolderOption]::DoNotVerify)
 $programs=[Environment]::GetFolderPath([Environment+SpecialFolder]::Programs,[Environment+SpecialFolderOption]::DoNotVerify)
 $shell=New-Object -ComObject WScript.Shell
-$entries=@(@{Directory=$desktop;Name='技能台账.lnk'},@{Directory=$programs;Name='技能台账 Skill Ledger.lnk'})
+$entries=@(@{Directory=$desktop;Name='Skilune 技序.lnk';Legacy='技能台账.lnk'},@{Directory=$programs;Name='Skilune 技序.lnk';Legacy='技能台账 Skill Ledger.lnk'})
 $created=@()
 foreach($entry in $entries){
     if(-not $entry.Directory){throw 'Windows shortcut directory is unavailable.'}
@@ -27,14 +27,24 @@ foreach($entry in $entries){
         $existing=$shell.CreateShortcut($shortcutPath)
         if(-not $existing.Arguments.Contains($launcher)){throw 'A shortcut from another installation already uses this name.'}
     }
+    $legacyPath=[IO.Path]::GetFullPath((Join-Path $directory $entry.Legacy))
+    if([IO.Path]::GetDirectoryName($legacyPath) -ne $directory){throw 'Invalid legacy shortcut path.'}
+    if(Test-Path -LiteralPath $legacyPath){
+        $legacy=$shell.CreateShortcut($legacyPath)
+        if($legacy.Arguments.Contains($launcher)){
+            if(Test-Path -LiteralPath $shortcutPath){Remove-Item -LiteralPath $legacyPath}
+            else{Move-Item -LiteralPath $legacyPath -Destination $shortcutPath}
+        }
+    }
     [void][IO.Directory]::CreateDirectory($directory)
     $shortcut=$shell.CreateShortcut($shortcutPath)
     $shortcut.TargetPath=$runtime
     $shortcut.Arguments='"{0}"' -f $launcher
     $shortcut.WorkingDirectory=$toolDirectory
     $shortcut.WindowStyle=7
-    $shortcut.IconLocation=(Join-Path $env:WINDIR 'System32\shell32.dll')+',70'
-    $shortcut.Description='技能台账：查看技能、使用方法和安装卸载记录'
+    $brandIcon=Join-Path $toolDirectory 'brand\app.ico'
+    $shortcut.IconLocation=if(Test-Path -LiteralPath $brandIcon){$brandIcon+',0'}else{(Join-Path $env:WINDIR 'System32\shell32.dll')+',70'}
+    $shortcut.Description='Skilune · 技序'
     $shortcut.Save()
     $verify=$shell.CreateShortcut($shortcutPath)
     if($verify.TargetPath -ne $runtime -or $verify.Arguments -ne $shortcut.Arguments){throw 'Shortcut verification failed.'}

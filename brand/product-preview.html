@@ -1,0 +1,328 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Skilune · 技序</title><link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2096%2096%22%20role%3D%22img%22%20aria-labelledby%3D%22title%22%3E%3Ctitle%20id%3D%22title%22%3ESkilune%20%C2%B7%20%E6%8A%80%E5%BA%8F%3C%2Ftitle%3E%3Crect%20width%3D%2296%22%20height%3D%2296%22%20rx%3D%2224%22%20fill%3D%22%23112E2B%22%2F%3E%3Cpath%20d%3D%22M29%2024H71V36H41V42H67V72H25V60H55V54H29Z%22%20fill%3D%22%2365E6BD%22%2F%3E%3C%2Fsvg%3E"><style>
+:root{font-family:"Segoe UI","Microsoft YaHei",sans-serif;color:#29352e;background:#f7f8fa;--muted:#8b968e;--line:#e6eae8;--accent:#226d55;--soft:#edf5f0}*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button,a,input,select{outline-offset:3px}button{cursor:pointer;color:inherit}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #388e70}svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}.app-header{height:76px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 30px;gap:20px}.brand{display:flex;align-items:center;gap:12px}.brand-icon{height:34px;width:34px;display:grid;place-items:center;background:var(--soft);color:var(--accent);border:1px solid #d6e6dc;border-radius:9px}h1{font-size:20px;letter-spacing:-.5px;font-weight:650;margin:0}.header-meta{display:flex;align-items:center;gap:17px;color:var(--muted);font-size:12px}.updated{display:flex;align-items:center;gap:7px}.dot{width:6px;height:6px;border-radius:50%;background:#4e9778}.icon-button{width:30px;height:30px;border:1px solid var(--line);border-radius:7px;background:#fff;display:grid;place-items:center;color:#7b8581}.icon-button:hover{background:#f4f6f5}.layout{display:grid;grid-template-columns:210px minmax(0,1fr);min-height:calc(100vh - 76px)}aside{background:#fff;border-right:1px solid var(--line);padding:29px 15px}.side-label{font-size:11px;letter-spacing:1px;color:#939d98;padding:0 13px;margin-bottom:13px}.category-list{display:flex;flex-direction:column;gap:4px}.category-button{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;border:0;background:transparent;padding:10px 12px;border-radius:7px;text-align:left;font-size:12px;color:#63716a;line-height:1.5}.category-button:hover{background:#f4f7f5}.category-button.active{background:var(--soft);color:#20583f;font-weight:600}.number{font-size:11px;font-variant-numeric:tabular-nums;color:#9aa39e;min-width:19px;text-align:right}.category-button.active .number{color:#4d8065}main{min-width:0;padding:24px 28px 34px}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:19px}.tabs{display:flex;gap:24px}.tab{position:relative;border:0;background:transparent;padding:9px 0 12px;color:#8b9590;font-size:14px}.tab.active{color:#273e32;font-weight:650}.tab.active:after{content:"";position:absolute;height:2px;background:var(--accent);left:0;right:0;bottom:0;border-radius:3px}.tools{display:flex;align-items:center;gap:13px}.text-button{border:0;background:none;padding:6px 0;font-size:12px;color:#87918c}.text-button:hover{color:#334c3b}.export{display:flex;align-items:center;gap:6px;text-decoration:none;font-size:12px;color:#53685c;border:1px solid #dce4de;background:white;padding:7px 11px;border-radius:6px}.export:hover{border-color:#a9bcae}.export svg{width:14px;height:14px}.table-shell{background:#fff;border:1px solid #e1e7e2;border-radius:9px;overflow:hidden}.table-scroll{overflow:auto;max-height:calc(100vh - 216px)}table{border-collapse:separate;border-spacing:0;width:100%;table-layout:fixed;font-size:12px;min-width:990px}thead{position:sticky;top:0;z-index:2;background:white}th{text-align:left;font-weight:550;color:#7c8981;background:#fafcfb}thead tr:first-child th{padding:13px 16px 7px;font-size:11px;white-space:nowrap}thead tr.filters th{padding:0 12px 12px;border-bottom:1px solid var(--line)}.sort{border:0;background:none;font-size:11px;color:inherit;padding:0;display:inline-flex;align-items:center;gap:5px}.arrow{font-size:10px;color:#b0b9b4}.sort.sorted .arrow{color:#4c7d62}.filter{width:100%;min-width:0;height:29px;border:1px solid #e4eae5;border-radius:4px;background:#fff;color:#50665a;padding:4px 7px;font-size:11px}.filter::placeholder{color:#b0b9b3}.filter:focus{border-color:#95b4a1;outline:1px solid #95b4a1;outline-offset:0}.filter-date{padding-left:4px;font-size:10px}td{padding:15px 16px;border-bottom:1px solid #edf0ed;line-height:1.7;vertical-align:middle}tbody tr:last-child td{border-bottom:0}tbody tr:hover{background:#fbfdfb}.skill-link{padding:0;border:0;background:none;text-align:left;display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:Consolas,"Segoe UI",monospace;font-size:12px;color:#354e3e;font-weight:500}.skill-link:hover{color:var(--accent);text-decoration:underline;text-underline-offset:3px}.category-cell{font-size:11px;color:#819087}.purpose-cell{color:#65746b;font-size:11px;line-height:1.8}.source-cell{color:#78857d;font-size:11px}.date-cell{color:#98a29b;font-size:10px;font-variant-numeric:tabular-nums;white-space:nowrap}.badge{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;border-radius:5px;padding:3px 8px;font-size:10px;line-height:1.6;font-weight:500}.badge:before{content:"";height:4px;width:4px;border-radius:50%;background:currentColor;opacity:.7}.badge.enabled{background:#edf7ef;color:#41805a}.badge.disabled{background:#f0f2f3;color:#89928f}.badge.uninstalled{background:#fcf0ed;color:#ae7569}.badge.archived{background:#f8f3e8;color:#a38b58}.badge.removed{background:#f0f1f4;color:#858a99}.table-footer{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#98a39b;padding:12px 16px;border-top:1px solid var(--line);background:#fff}.empty{text-align:center;padding:70px 20px;color:#8a968d}.empty strong{display:block;color:#5b6d60;font-size:14px;margin-bottom:7px;font-weight:500}.empty button{color:var(--accent);border:0;background:none;margin-top:14px;font-size:12px}.history-summary{color:#7c8981;font-size:11px}.history-action{font-size:11px;color:#6e8374}dialog{border:1px solid #dce5de;border-radius:12px;width:min(580px,calc(100vw - 36px));padding:0;color:#29352e;box-shadow:0 20px 90px #1b352224}dialog::backdrop{background:#18251b45;backdrop-filter:blur(2px)}.dialog-header{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;padding:22px 24px 17px;border-bottom:1px solid var(--line)}.dialog-header h2{font-size:16px;line-height:1.6;font-weight:600;margin:0;overflow-wrap:anywhere}.dialog-body{padding:20px 24px 25px;font-size:12px;color:#67796b}.dialog-body dl{display:grid;grid-template-columns:72px minmax(0,1fr);gap:15px 14px;margin:0}.dialog-body dt{color:#99a59c}.dialog-body dd{margin:0;overflow-wrap:anywhere;white-space:pre-wrap;line-height:1.8}.history-entry{display:grid;grid-template-columns:110px 45px 1fr;gap:8px;font-size:11px;padding:10px 0;border-bottom:1px solid #eef1ed}.dialog-body h3{font-size:12px;font-weight:600;margin:24px 0 7px;color:#4d6754}.about-text{line-height:2;margin:0}.about-text+.about-text{margin-top:12px}body:has(dialog[open]){overflow:hidden}@media(min-width:1700px){main{padding:24px 42px}.layout{grid-template-columns:230px minmax(0,1fr)}.skill-link{font-size:13px}.purpose-cell{font-size:12px}td{padding-top:17px;padding-bottom:17px}}@media(max-width:1050px){.layout{grid-template-columns:175px minmax(0,1fr)}main{padding:19px 18px}.app-header{padding:0 20px}.category-button{font-size:11px}aside{padding-left:9px;padding-right:9px}}@media(max-width:760px){.layout{display:block}aside{display:none}.app-header{height:66px;padding:0 17px}main{padding:15px 12px}.header-meta{gap:10px}.toolbar{gap:10px}.tabs{gap:19px}.tab{font-size:13px}.tools{gap:11px}.table-scroll{max-height:calc(100vh - 190px)}h1{font-size:18px}.updated{font-size:10px}}
+
+[hidden]{display:none!important}.brand-icon{border-radius:9px;background:#eaf3ed;color:#226d55}.brand-icon svg{width:23px;height:23px;stroke-width:1.5}.header-meta .label{font-size:11px;color:#89968e}
+.filter-context{display:flex;align-items:center;gap:12px;margin:-5px 0 13px;font-size:11px;color:#647b6c}.exact-chip{display:inline-flex;align-items:center;gap:8px;padding:5px 9px;background:#edf5f0;border:1px solid #dae8de;border-radius:5px;max-width:100%}.exact-chip span{overflow-wrap:anywhere}.exact-chip button{border:0;background:transparent;padding:0 2px;color:#6e8778}.filter-error{color:#a65448;margin:0}.filter-context:has(>[hidden]):not(:has(>:not([hidden]))){display:none}
+.date-range{display:grid;grid-template-columns:1fr 1fr;gap:5px}.date-range input{min-width:0;font-size:10px;height:29px;padding:3px}.filter-date::-webkit-calendar-picker-indicator{width:11px;margin:0}.category-button.no-results:not(.active){color:#a4ada7}.event-time-value{display:block;font-size:11px;white-space:nowrap;font-variant-numeric:tabular-nums;color:#66796c}.time-kind{display:block;font-size:10px;color:#9ba69f;margin-top:2px}.time-kind.operation{color:#438160}.time-kind.recorded{color:#a18b66}.dialog-body{max-height:65vh;overflow:auto}.dialog-actions{display:flex;justify-content:flex-end;gap:10px;border-top:1px solid var(--line);padding:14px 24px;background:#fafcfb}.action-button{border:1px solid #dce5de;border-radius:5px;background:#fff;color:#577260;padding:7px 12px;font-size:11px}.action-button.primary{background:#edf5f0;border-color:#d6e6dc;color:#276249}.event-panel{padding:13px 15px;margin-bottom:21px;border:1px solid #dfebe3;background:#f4f9f5;border-radius:7px}.event-panel strong{color:#3e6a4c;font-weight:600}.event-panel p{margin:5px 0 0;font-size:11px;line-height:1.8}.timeline-event{position:relative;display:grid;grid-template-columns:1fr;gap:4px;padding:12px 0 12px 16px;border-left:1px solid #e1e9e3;margin-left:4px}.timeline-event:before{content:'';position:absolute;left:-3px;top:17px;width:5px;height:5px;border-radius:50%;background:#87ab94}.timeline-action{font-size:11px;color:#4f725c}.timeline-time{font-size:10px;color:#99a49c;font-variant-numeric:tabular-nums}.timeline-description{font-size:11px;color:#7d8d82;line-height:1.8}.scan-note{font-size:10px;color:#9aa59d;border-top:1px solid var(--line);padding-top:12px;margin-top:18px}.table-footer{gap:12px}.export{white-space:nowrap}@media(max-width:760px){.header-meta .label{display:none}.toolbar{flex-wrap:wrap}.date-range{grid-template-columns:1fr 1fr}.dialog-actions{padding:12px 18px}}
+
+.pick-cell{padding-left:12px;padding-right:5px}th:has(#select-all){padding-left:12px!important;padding-right:5px!important}input[type=checkbox]{accent-color:#226d55;cursor:pointer;width:13px;height:13px}.row-action{padding-left:10px;padding-right:10px}.remove-button{border:0;background:none;color:#a46b60;font-size:10px;padding:4px 0;white-space:nowrap}.remove-button:hover{text-decoration:underline}.protected-note{font-size:10px;color:#a4aca6}.danger{color:#a46459;border-color:#e7d5d0}.danger:disabled{color:#b7b9b7;border-color:#e6e9e6;cursor:default}.manager-notice{margin:0 0 14px;padding:9px 12px;border:1px solid #d8e7dd;background:#f0f7f2;color:#547b61;font-size:11px;border-radius:6px}.manager-notice.error,.error-message{color:#a25b50}.remove-group{border:1px solid #e3e9e4;border-radius:6px;padding:12px 14px;margin:12px 0;line-height:1.8}.remove-group strong{font-size:12px;color:#536a5a}.remove-group p{font-size:11px;overflow-wrap:anywhere;margin:5px 0}.impact-note{font-size:11px;color:#9b8476;line-height:1.8}.remove-summary{font-size:12px;line-height:1.9;color:#63776a}.action-button:disabled{opacity:.5;cursor:default}.error-message{line-height:1.9}.table-scroll{max-height:calc(100vh - 216px)}
+
+.selection-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 13px;padding:11px 13px;border:1px solid #e0e8e2;border-radius:7px;background:#f9fcfa}.selection-buttons,.selection-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}#selection-summary{font-size:11px;color:#758a7c;line-height:1.8}.selection-bar button{white-space:nowrap}.table-scroll{max-height:calc(100vh - 280px)}input[type=checkbox]{width:16px;height:16px;margin:0;vertical-align:middle;flex-shrink:0}.pick-cell{padding-left:12px;padding-right:6px}th:has(#select-all){padding-left:12px!important;padding-right:6px!important}.badge{font-size:11px;font-weight:600;padding:4px 9px}.badge.uninstalled{background:#f1f2f5;color:#777e8b}.remove-button{padding:5px 9px;border:1px solid #e6d9d4;border-radius:4px;background:#fffaf8}.remove-button:disabled{opacity:.5;cursor:default}.protected-note{border:0;background:none;padding:0;font:inherit;font-size:10px;color:#98a29b;white-space:nowrap}#remove-dialog{width:min(720px,calc(100vw - 36px))}.remove-skill-row{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;border-top:1px solid #edf0ed;padding:8px 0;font-size:11px;line-height:1.7}.remove-skill-row:first-of-type{margin-top:8px}.remove-skill-name{font-family:Consolas,"Microsoft YaHei",monospace;overflow-wrap:anywhere;min-width:0}.scope-tag,.result-tag{font-size:10px;white-space:nowrap;color:#86958a;background:#f1f5f2;border-radius:4px;padding:2px 7px}.scope-tag.extra{color:#ad8054;background:#faf3e9}.result-tag.success{color:#3e8257;background:#edf7ef}.result-tag.failure{color:#b06c5a;background:#fbefeb}.blocked-group{background:#f7f8fa;border:1px solid #e5e8eb;border-radius:6px;padding:12px 14px;margin:12px 0;font-size:11px;color:#87938b}.blocked-group strong{font-size:11px;font-weight:600}.blocked-item{display:grid;gap:3px;margin-top:12px;line-height:1.7}.impact-ack{display:flex;gap:10px;padding:12px 0 2px;font-size:11px;line-height:1.9;color:#8e7563;align-items:flex-start}.impact-ack input{margin-top:3px}.error-message{overflow-wrap:anywhere;font-size:11px}.selection-buttons .text-button:disabled,.selection-actions .text-button:disabled{opacity:.45;cursor:default}@media(max-width:1050px){.selection-bar{align-items:flex-start}.selection-actions{width:100%;justify-content:flex-end}.selection-actions #selection-summary{margin-right:auto}.selection-buttons{gap:12px}.table-scroll{max-height:calc(100vh - 325px)}}
+
+.usage-cell{font-size:10px;line-height:1.7;color:#647a6b}.usage-example{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere;white-space:pre-line}.usage-note{display:block;font-size:10px;line-height:1.7;color:#ad8b5f;margin:0 0 5px}.copy-usage{border:0;background:transparent;color:#38785a;padding:2px 0;margin-top:4px;font-size:10px;text-decoration:underline;text-underline-offset:3px}.copy-usage:hover{color:#195e3b}.source-type{display:block;font-size:10px;color:#a0aaa3;margin-top:3px;line-height:1.6}.managed-note{display:inline-block;border:0;background:#f0f3f1;color:#7d8e83;font-size:10px;line-height:1.7;padding:3px 6px;border-radius:4px;white-space:normal;cursor:help}.managed-note:focus-visible{outline:2px solid #8caf9b;outline-offset:2px}.usage-instructions{margin-top:24px}.usage-instructions p{font-size:11px;line-height:1.9}.usage-full{font-family:"Segoe UI","Microsoft YaHei",sans-serif;font-size:11px;line-height:1.9;white-space:pre-wrap;overflow-wrap:anywhere;background:#f5f8f5;border:1px solid #e2eae3;border-radius:6px;padding:12px;margin:10px 0 4px}.usage-help{font-size:11px;line-height:1.9;color:#8c9b90}.copy-text{width:100%;resize:vertical;min-height:150px;max-height:50vh;border:1px solid #dce7de;border-radius:6px;background:#f8fbf8;padding:12px;color:#526b5b;font:12px/1.9 "Segoe UI","Microsoft YaHei",sans-serif}.source-cell{overflow-wrap:anywhere}.row-action{padding-left:7px;padding-right:7px}.table-scroll table{min-width:1060px}
+
+.invocation-badge{display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;vertical-align:middle;white-space:nowrap;font-size:10px;line-height:1.65;padding:2px 6px;border-radius:4px;margin:0 0 5px;border:1px solid transparent}.invocation-badge.auto_manual{color:#4d8270;background:#edf6f1;border-color:#e1ede6}.invocation-badge.manual{color:#8270a0;background:#f3f0f9;border-color:#eae4f2}.invocation-badge.mixed{color:#a17c4a;background:#fbf5e9;border-color:#f1e6cf}.invocation-badge.unknown{color:#8b9490;background:#f0f2f1;border-color:#e7eae8}.invocation-filter{margin-bottom:5px}.usage-instructions h4{font-size:11px;color:#627b6a;font-weight:600;margin:18px 0 5px}.invocation-evidence{border-top:1px solid #e6ece7;margin-top:20px;padding-top:12px;font-size:11px;color:#89998c}.invocation-evidence summary{cursor:pointer;color:#7a8e80}.invocation-evidence p{white-space:pre-line;overflow-wrap:anywhere;font-size:10px;line-height:1.8}.usage-example{font-family:Consolas,"Segoe UI","Microsoft YaHei",monospace}
+.scan-path{overflow-wrap:anywhere;white-space:pre-wrap;font-size:11px;line-height:1.8}.category-cell{overflow-wrap:anywhere}.category-button{overflow-wrap:anywhere}.side-label{letter-spacing:0}aside{max-height:calc(100vh - 76px);overflow:auto;position:sticky;top:0}#scan-path{height:36px}#scan-dialog .dialog-body{max-height:60vh}.brand-icon{width:40px;height:40px;border:0;background:transparent}.brand-icon svg{width:40px;height:40px;stroke:none}.brand-cn{font-size:12px;font-weight:500;color:#70877a;border-left:1px solid #dce6df;padding-left:12px;margin-left:10px;letter-spacing:1px}.brand h1{font-size:22px;letter-spacing:-.7px}#about-title{letter-spacing:-.3px}</style></head><body>
+<header class="app-header"><div class="brand"><span class="brand-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-labelledby="title"><title id="title">Skilune · 技序</title><rect width="96" height="96" rx="24" fill="#112E2B"/><path d="M29 24H71V36H41V42H67V72H25V60H55V54H29Z" fill="#65E6BD"/></svg></span><h1>Skilune <span class="brand-cn">技序</span></h1></div><div class="header-meta"><button class="icon-button" id="about-button" aria-label="关于 Skilune" title="关于 Skilune"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 11v5M12 8h.01"/></svg></button></div></header>
+<div class="layout"><aside aria-label="安装范围"><div class="side-label">安装范围</div><nav id="categories" class="category-list"></nav></aside><main><div class="toolbar"><div class="tabs" role="tablist" aria-label="台账视图"><button class="tab active" id="skills-tab" role="tab" aria-selected="true">技能清单</button><button class="tab" id="logs-tab" role="tab" aria-selected="false">操作日志</button></div><div class="tools"><button class="text-button" id="scan-button">扫描范围</button><button class="text-button" id="reset">清空筛选</button><a class="export" id="export" href="当前技能.csv" download><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m-4-4 4 4 4-4M5 16v4h14v-4"/></svg>导出当前结果</a></div></div>
+<p id="manager-notice" class="manager-notice" role="status" hidden></p><div class="filter-context"><div class="exact-chip" id="exact-skill" hidden>仅此技能 <span id="exact-skill-name"></span><button id="clear-exact" aria-label="清除技能限定">×</button></div><p class="filter-error" id="filter-error" role="alert" hidden></p></div>
+<div id="selection-tools" class="selection-bar"><div class="selection-buttons"><button class="action-button" id="select-visible">全选当前结果</button></div><div class="selection-actions"><span id="selection-summary" aria-live="polite"></span><button class="text-button" id="clear-selection" disabled>清空选择</button><button class="action-button danger" id="bulk-remove" disabled>卸载所选</button></div></div><section class="table-shell" aria-label="Skilune"><div class="table-scroll" id="table-scroll"><table><colgroup id="columns"></colgroup><thead id="head"></thead><tbody id="body"></tbody></table></div><div class="table-footer"><span id="count" aria-live="polite"></span></div></section></main></div>
+<dialog id="detail" aria-labelledby="detail-title"><div class="dialog-header"><h2 id="detail-title"></h2><button class="icon-button" id="detail-close" aria-label="关闭详情">×</button></div><div id="detail-body" class="dialog-body"></div><div class="dialog-actions"><button class="action-button danger" id="detail-remove" hidden>卸载</button><button class="action-button" id="locate-skill">在清单中查看</button><button class="action-button primary" id="skill-logs">查看此技能日志</button></div></dialog>
+<dialog id="remove-dialog" aria-labelledby="remove-title"><div class="dialog-header"><h2 id="remove-title">确认卸载范围</h2></div><div class="dialog-body" id="remove-body"></div><div class="dialog-actions"><button class="action-button" id="remove-close">关闭</button><button class="action-button danger" id="remove-confirm" disabled>确认卸载</button></div></dialog><dialog id="about" aria-labelledby="about-title"><div class="dialog-header"><h2 id="about-title">关于 Skilune · 技序</h2><button class="icon-button" id="about-close" aria-label="关闭说明">×</button></div><div class="dialog-body"><p class="about-text">安装状态只有两种：已安装表示技能仍安装在本机，包括关闭启用开关的技能；已卸载表示已移出安装目录。恢复备份是普通备份文件，不属于已安装技能。仅有缓存的项目不计入清单。</p><p class="about-text">操作时间：有明确执行记录。检测时间：后台发现变化，可能晚于实际操作。记录时间：旧资料的留存时间。缺少依据的安装时间显示“未记录”。</p><p class="about-text">全选当前结果只操作当前列表：未全选时补齐，已全选时再次点击取消当前结果，保留其他项目选择。如需选全部项目，先切换到全部技能并清空筛选，再全选当前结果。筛选和切换页签保留选择，清空选择才会取消。卸载前单独列出选中项、连带项与不能卸载项；插件卸载须核对整个插件的影响范围。</p><p class="about-text">技能来源表示提供该技能的插件或本地安装方式，不表示作者、下载网址或文件位置。使用方法区分自动匹配与手动调用。自动匹配是否发生由任务决定；手动调用时，在桌面端输入 / 并从菜单选中技能，再填写任务。CLI/IDE 使用 /skills 菜单或 $技能名 引用。请替换【】中的材料，尚未安装或启用的技能需先完成设置。调用规则参考 <a href="https://developers.openai.com/codex/skills" target="_blank" rel="noopener noreferrer">官方技能说明</a>。</p><p class="scan-note">最近检查：<span id="last-scan"></span>。关闭电脑或记录器停止期间无法实时记录。</p></div></dialog>
+<dialog id="scan-dialog" aria-labelledby="scan-title"><div class="dialog-header"><h2 id="scan-title">项目与扫描范围</h2><button class="icon-button" id="scan-close" aria-label="关闭扫描范围">×</button></div><div class="dialog-body"><div id="scan-body"></div><h3>添加项目或项目集合目录</h3><input id="scan-path" class="filter" placeholder="例如 D:\Projects" aria-label="项目文件夹绝对路径"><label class="impact-ack"><input type="checkbox" id="scan-collection"><span>这是项目集合目录（包含多个项目）</span></label><p id="scan-status" role="status" class="usage-help"></p></div><div class="dialog-actions"><button id="scan-add" class="action-button">添加并扫描</button><button id="scan-refresh" class="action-button primary">立即检查</button></div></dialog><dialog id="copy-dialog" aria-labelledby="copy-title"><div class="dialog-header"><h2 id="copy-title">复制使用示例</h2><button class="icon-button" id="copy-close" aria-label="关闭复制窗口">×</button></div><div class="dialog-body"><p class="usage-help">浏览器未允许自动复制。以下内容已选中，按 Ctrl+C 复制，再粘贴到本机 Codex 对话中。</p><textarea id="copy-text" class="copy-text" rows="8" readonly aria-label="待复制的使用示例"></textarea></div></dialog><script type="application/json" id="data">{"updated": "2026-10-18T16:00:00+08:00", "revision": "skilune-preview", "skills": [{"name": "copy-editing", "skill_name": "copy-editing", "scope_id": "global", "scope_label": "全局技能", "scope_kind": "global", "scope_path": "", "installed": true, "status": "已启用", "category": "", "purpose": "文案润色与结构检查。", "source": "本地技能", "paths": ["D:/Demo/skills/copy-editing/SKILL.md"], "management": {"kind": "local"}, "usage": "/copy-editing 【任务目标与输入材料】", "usage_auto": "请根据提供的材料，文案润色与结构检查。", "invocation": {"mode": "auto_manual", "label": "自动匹配 + 手动", "summary": "示例调用策略，实际以技能文件为准。", "copies": []}, "lifecycle": {"present_at_baseline": true}}, {"name": "imagegen", "skill_name": "imagegen", "scope_id": "global", "scope_label": "全局技能", "scope_kind": "global", "scope_path": "", "installed": true, "status": "已启用", "category": "", "purpose": "按描述生成或修改图片。", "source": "Codex 内置", "paths": ["D:/Demo/skills/imagegen/SKILL.md"], "management": {"kind": "none", "reason": "Codex 内置技能，请在 Codex 中管理。"}, "usage": "/imagegen 【任务目标与输入材料】", "usage_auto": "请根据提供的材料，按描述生成或修改图片。", "invocation": {"mode": "auto_manual", "label": "自动匹配 + 手动", "summary": "示例调用策略，实际以技能文件为准。", "copies": []}, "lifecycle": {"present_at_baseline": true}}, {"name": "obsidian-vault", "skill_name": "obsidian-vault", "scope_id": "global", "scope_label": "全局技能", "scope_kind": "global", "scope_path": "", "installed": true, "status": "已启用", "category": "", "purpose": "整理笔记与双向链接。", "source": "本地技能", "paths": ["D:/Demo/skills/obsidian-vault/SKILL.md"], "management": {"kind": "local"}, "usage": "/obsidian-vault 【任务目标与输入材料】", "usage_auto": "请根据提供的材料，整理笔记与双向链接。", "invocation": {"mode": "auto_manual", "label": "自动匹配 + 手动", "summary": "示例调用策略，实际以技能文件为准。", "copies": []}, "lifecycle": {"present_at_baseline": true}}, {"name": "to-spec@@project-demo", "skill_name": "to-spec", "scope_id": "project-demo", "scope_label": "产品工作台", "scope_kind": "project", "scope_path": "D:/Projects/Product", "installed": true, "status": "已启用", "category": "", "purpose": "把讨论整理成可执行规格。", "source": "本地技能", "paths": ["D:/Demo/skills/to-spec/SKILL.md"], "management": {"kind": "local"}, "usage": "/to-spec 【任务目标与输入材料】", "usage_auto": "请根据提供的材料，把讨论整理成可执行规格。", "invocation": {"mode": "manual", "label": "仅手动调用", "summary": "示例调用策略，实际以技能文件为准。", "copies": []}, "lifecycle": {"present_at_baseline": true}}, {"name": "copy-editing@@project-demo", "skill_name": "copy-editing", "scope_id": "project-demo", "scope_label": "产品工作台", "scope_kind": "project", "scope_path": "D:/Projects/Product", "installed": true, "status": "已启用", "category": "", "purpose": "为项目文案提供专用修改规则。", "source": "本地技能", "paths": ["D:/Demo/skills/copy-editing/SKILL.md"], "management": {"kind": "local"}, "usage": "/copy-editing 【任务目标与输入材料】", "usage_auto": "请根据提供的材料，为项目文案提供专用修改规则。", "invocation": {"mode": "auto_manual", "label": "自动匹配 + 手动", "summary": "示例调用策略，实际以技能文件为准。", "copies": []}, "lifecycle": {"present_at_baseline": true}}], "events": [], "discovery": {"roots": [{"path": "D:/Projects", "collection": true}], "scopes": [], "warnings": [], "depth": 6}}</script><script>window.__SKILL_LEDGER_TEST__=true;
+const SkillLedgerModel=(()=>{
+ const clone=value=>JSON.parse(JSON.stringify(value));
+ const blankSkills=()=>({name:'',exactName:'',status:'',purpose:'',usage:'',invocation:'',source:''});
+ const blankLogs=()=>({name:'',exactName:'',action:'',description:'',from:'',to:''});
+ const defaults=()=>({view:'skills',category:'',skills:{...blankSkills(),status:'已安装'},logs:blankLogs(),sort:{skills:{key:'name',direction:1},logs:{key:'time',direction:-1}},scroll:{skills:0,logs:0},detail:null});
+ const status=value=>['已安装','已启用','已停用','使用中'].includes(value)?'已安装':['已卸载','已归档','已移除','未发现'].includes(value)?'已卸载':'';
+ const installed=row=>typeof row.installed==='boolean'?row.installed:row.status==='已安装';
+ const toggleSelection=(current,names,checked)=>{const next=new Set(current);for(const name of names){if(checked)next.add(name);else next.delete(name)}return next};
+ const pruneSelection=(current,skills)=>new Set(skills.filter(row=>installed(row)&&current.has(row.name)).map(row=>row.name));
+ const scopeKey=row=>row.scope_id||row.category||'global';
+ const scopeLabel=row=>row.scope_label||row.category||'全局技能';
+ const toggleScope=(current,names)=>toggleSelection(current,names,!names.length||!names.every(name=>current.has(name)));
+ const contains=(value,q)=>!q||String(value||'').toLowerCase().includes(q.trim().toLowerCase());
+ function normalize(raw){
+  const state=defaults();if(!raw||typeof raw!=='object')return state;
+  if(['skills','logs'].includes(raw.view))state.view=raw.view;
+  if(typeof raw.category==='string')state.category=raw.category;
+  for(const view of ['skills','logs']){
+   for(const key of Object.keys(state[view]))if(typeof raw[view]?.[key]==='string')state[view][key]=raw[view][key];
+   const allowed=view==='skills'?['name','category','status','purpose','usage','source']:['time','name','category','action','description'];
+   if(allowed.includes(raw.sort?.[view]?.key))state.sort[view]={key:raw.sort[view].key,direction:raw.sort[view].direction===-1?-1:1};
+   if(Number.isFinite(raw.scroll?.[view]))state.scroll[view]=Math.max(0,raw.scroll[view]);
+  }
+  if(raw.detail&&typeof raw.detail.name==='string')state.detail={name:raw.detail.name,eventId:typeof raw.detail.eventId==='string'?raw.detail.eventId:''};
+  state.skills.status=status(state.skills.status);if(['归档','移除'].includes(state.logs.action))state.logs.action='卸载';return state
+ }
+ function reduce(state,action){
+  const next=clone(state),view=next.view;
+  if(action.type==='TAB'&&['skills','logs'].includes(action.view)){next.view=action.view;next.detail=null}
+  if(action.type==='CATEGORY'){next.category=action.value;next.scroll={skills:0,logs:0}}
+  if(action.type==='FILTER'&&Object.hasOwn(next[view],action.key)){next[view][action.key]=action.value;if(action.key==='name')next[view].exactName='';next.scroll[view]=0}
+  if(action.type==='CLEAR'){next.category='';next[view]=view==='skills'?blankSkills():blankLogs();next.scroll[view]=0}
+  if(action.type==='SORT'){const current=next.sort[view];next.sort[view]={key:action.key,direction:current.key===action.key?-current.direction:action.key==='time'?-1:1};next.scroll[view]=0}
+  if(action.type==='SCROLL')next.scroll[view]=Math.max(0,action.value);
+  if(action.type==='DETAIL')next.detail={name:action.name,eventId:action.eventId||''};
+  if(action.type==='CLOSE_DETAIL')next.detail=null;
+  if(action.type==='SKILL_LOGS'){next.view='logs';next.logs={...blankLogs(),name:action.name,exactName:action.name};next.scroll.logs=0;next.detail=null}
+  if(action.type==='LOCATE_SKILL'){next.view='skills';next.skills={...blankSkills(),name:action.name,exactName:action.name};next.scroll.skills=0;next.detail=null}
+  return next
+ }
+ function dateError(state){return state.view==='logs'&&state.logs.from&&state.logs.to&&state.logs.from>state.logs.to?'开始日期不能晚于结束日期。':''}
+ function select(data,state,ignoreCategory=false){
+  if(dateError(state))return [];
+  const f=state[state.view];let rows;
+  if(state.view==='skills')rows=data.skills.filter(r=>(!f.exactName?r.name&&contains(r.name,f.name):r.name===f.exactName)&&(!f.status||r.status===f.status)&&contains(r.purpose,f.purpose)&&contains([r.invocation?.label,r.usage_note,r.usage].filter(Boolean).join(' '),f.usage)&&(!f.invocation||r.invocation?.mode===f.invocation)&&(!f.source||r.source===f.source));
+  else rows=data.events.filter(e=>(!f.exactName?contains(e.name,f.name):e.name===f.exactName)&&(!f.action||e.action===f.action)&&contains(e.description||e.detail,f.description)&&(!f.from||e.time.slice(0,10)>=f.from)&&(!f.to||e.time.slice(0,10)<=f.to));
+  if(!ignoreCategory&&state.category)rows=rows.filter(r=>scopeKey(r)===state.category);
+  const sort=state.sort[state.view],sortValue=row=>sort.key==='category'?scopeLabel(row):sort.key==='name'?(row.skill_name||row.name):row[sort.key];return [...rows].sort((a,b)=>String(sortValue(a)||'').localeCompare(String(sortValue(b)||''),'zh-CN')*sort.direction)
+ }
+ function csv(data,state){
+  const rows=select(data,state),history=state.view==='logs';
+  const fields=history?['事件时间','时间类型','操作','技能名称','所属项目 / 范围','说明']:['技能名称','所属项目 / 范围','状态','用途','调用方式','使用方法','技能来源'];
+  const cells=history?rows.map(r=>[r.time,r.time_label,r.action_label||r.action,r.skill_name||r.name,scopeLabel(r),r.description||r.detail]):rows.map(r=>[r.skill_name||r.name,scopeLabel(r),r.status,r.purpose,r.invocation?.label||'策略待核对',[r.usage_note,r.usage_desktop_hint,r.usage].filter(Boolean).join('\n'),r.source]);
+  const escape=value=>{let text=String(value??'');if(/^[=+\-@\t\r\n]/.test(text))text="'"+text;return '"'+text.replaceAll('"','""')+'"'};
+  return '\ufeff'+[fields,...cells].map(row=>row.map(escape).join(',')).join('\r\n')+'\r\n'
+ }
+ function hash(state){
+  const p=new URLSearchParams({view:state.view});if(state.category)p.set('category',state.category);
+  for(const [key,value]of Object.entries(state[state.view]))if(value)p.set(key,value);
+  if(state.detail){p.set('detail',state.detail.name);if(state.detail.eventId)p.set('event',state.detail.eventId)}
+  return '#'+p.toString()
+ }
+ function fromHash(value,fallback){
+  const p=new URLSearchParams(value.replace(/^#/,''));if(!['skills','logs'].includes(p.get('view')))return normalize(fallback);
+  const state=normalize(fallback);state.view=p.get('view');state.category=p.get('category')||'';
+  state[state.view]=state.view==='skills'?blankSkills():blankLogs();
+  for(const key of Object.keys(state[state.view]))state[state.view][key]=p.get(key)||'';
+  state.detail=p.get('detail')?{name:p.get('detail'),eventId:p.get('event')||''}:null;return normalize(state)
+ }
+ return {defaults,normalize,reduce,select,csv,dateError,hash,fromHash,status,installed,toggleSelection,pruneSelection,toggleScope,scopeKey,scopeLabel}
+})();
+if(typeof module!=='undefined'&&module.exports)module.exports=SkillLedgerModel;
+if(typeof document!=='undefined')(()=>{
+ const M=SkillLedgerModel,$=id=>document.getElementById(id),make=(tag,className,text)=>{const node=document.createElement(tag);if(className)node.className=className;if(text!==undefined)node.textContent=text;return node};
+ const prepare=value=>({...value,skills:value.skills.map(row=>{const installed=typeof row.installed==='boolean'?row.installed:['已安装','已启用','已停用'].includes(row.status);return {...row,installed,raw_status:row.status,status:installed?'已安装':'已卸载',invocation:row.invocation||{mode:'unknown',label:'策略待核对',summary:'暂未读取调用策略，建议从技能菜单手动选择。',copies:[]},usage:row.usage||'/'+(row.skill_name||row.name.split('@@project-')[0]).split(':').at(-1)+' 【任务和材料】',usage_note:row.usage_note||(!installed?'先安装该技能，再使用下方示例。':row.status==='已停用'?'先在 Codex 中开启该技能的启用设置。':'')}}),events:value.events.map(event=>({...event,raw_action:event.action,action:['归档','移除'].includes(event.action)?'卸载':event.action,action_label:event.action==='归档'?'卸载':event.action_label||event.action}))});
+ let data=prepare(JSON.parse($('data').textContent)),saved=null,connection=null,selection=new Set(),plan=null,busy=false;
+ const access=new URLSearchParams(location.hash.replace(/^#/,''));
+ try{saved=JSON.parse(localStorage.getItem('skill-ledger-view-v5'));const token=access.get('access')||sessionStorage.getItem('skill-ledger-access');if(token&&location.protocol==='http:'){connection={url:location.origin,token};sessionStorage.setItem('skill-ledger-access',token)}}catch{}
+ let state=M.fromHash(location.hash,saved||M.defaults());let rendering=false;let headerView='';let headerSignature='';
+ const timeText=value=>value?value.slice(0,19).replace('T',' '):'未记录';
+ const options=(values,selected)=>[...new Set([...values,...(selected?[selected]:[])])].sort((a,b)=>a.localeCompare(b,'zh-CN'));
+ const skillMap=()=>new Map(data.skills.map(s=>[s.name,s]));
+ const scopeMap=()=>new Map([...(data.discovery?.scopes||[]).map(r=>[r.scope_id,r]),...data.skills.map(r=>[M.scopeKey(r),{scope_id:M.scopeKey(r),scope_label:M.scopeLabel(r),scope_path:r.scope_path||''}])]);
+ const scopeCaption=key=>key?(scopeMap().get(key)?.scope_label||key):'全部技能';
+ const displayName=name=>{const skill=skillMap().get(name);return skill?.skill_name||name.split('@@project-')[0]};
+ const removalName=name=>displayName(name)+(skillMap().get(name)?.scope_kind==='project'?' · '+M.scopeLabel(skillMap().get(name)):'');
+ if(data.discovery&&state.category&&!scopeMap().has(state.category))state.category='';
+ function remember(){try{localStorage.setItem('skill-ledger-view-v5',JSON.stringify(state))}catch{}}
+ function writeHistory(push,detailEntry=false){
+  const value={skillLedger:true,state:JSON.parse(JSON.stringify(state)),detailEntry};
+  try{history[push?'pushState':'replaceState'](value,'',M.hash(state))}catch{}
+  remember()
+ }
+ function transition(action,push=false){
+  state.scroll[state.view]=$('table-scroll').scrollTop;
+  if(push)writeHistory(false,Boolean(state.detail));
+  state=M.reduce(state,action);writeHistory(push,action.type==='DETAIL');render()
+ }
+ function badge(status){return make('span','badge '+(status==='已安装'?'enabled':'uninstalled'),status)}
+ function invocationBadge(skill){const policy=skill.invocation;const tag=make('span','invocation-badge '+policy.mode,policy.label+(policy.scope==='backup'?'（备份）':''));tag.title=policy.summary;return tag}
+ function fillUsageCell(cell,skill){cell.append(invocationBadge(skill));if(skill.usage_note)cell.append(make('span','usage-note',skill.usage_note));const example=make('span','usage-example',skill.usage);example.title=(skill.usage_desktop_hint||'输入 /，从菜单选择对应技能，再填写任务。')+'\n'+skill.usage;cell.append(example,copyButton(skill))}
+ function usageDetails(skill){
+  const section=make('section','usage-instructions'),policy=skill.invocation;section.append(make('h3','','调用方式'),invocationBadge(skill),make('p','',policy.summary));
+  if(skill.usage_note)section.append(make('p','usage-note',skill.usage_note));
+  if(policy.mode==='auto_manual'&&skill.usage_auto){section.append(make('h4','','自动匹配'),make('p','','直接描述相关任务，Codex 可按场景选择本技能；不保证每次自动触发。'),make('pre','usage-full',skill.usage_auto),copyButton(skill,'auto'))}
+  section.append(make('h4','','桌面端手动调用'),make('p','',skill.usage_desktop_hint||'输入 /，从菜单选中对应技能，再填写任务。'),make('pre','usage-full',skill.usage),copyButton(skill));
+  if(skill.usage_connection)section.append(make('p','usage-help',skill.usage_connection));if(skill.usage_cli_hint)section.append(make('p','usage-help',skill.usage_cli_hint));
+  const evidence=make('details','invocation-evidence');evidence.append(make('summary','','查看判断依据'));
+  for(const copy of policy.copies||[])evidence.append(make('p','',copy.skill_path+'\n'+copy.basis+'\n'+copy.metadata_path));
+  if(!policy.copies?.length)evidence.append(make('p','','没有可读取的当前技能文件或恢复备份，自动匹配策略尚待核对。'));
+  if(policy.description)evidence.append(make('h4','','技能声明的适用场景'),make('p','',policy.description));section.append(evidence);return section
+ }
+ function nameButton(name,eventId=''){const button=make('button','skill-link',displayName(name).includes(':')?displayName(name).slice(displayName(name).indexOf(':')+1):displayName(name));button.type='button';button.title=name.includes('@@project-')?displayName(name)+' · '+(skillMap().get(name)?.scope_path||'项目技能'):name;button.onclick=()=>transition({type:'DETAIL',name,eventId},true);return button}
+ function buildHead(){
+  const sourceValues=options(data.skills.map(s=>s.source),state.skills.source),categoryValues=[...scopeMap().keys()].sort();
+  const signature=JSON.stringify([state.view,sourceValues,categoryValues,data.events.map(e=>e.action).filter((v,i,a)=>a.indexOf(v)===i),state.sort[state.view]]);
+  if(signature===headerSignature&&state.view===headerView)return;
+  const focused=document.activeElement,id=focused?.id,textSelection=focused?.type==='search'?[focused.selectionStart,focused.selectionEnd]:null;
+  headerSignature=signature;headerView=state.view;$('head').replaceChildren();$('columns').replaceChildren();
+  const fields=state.view==='skills'?[['技能名称','name',18,'text'],['所属范围','category',11,'category'],['状态','status',9,'status'],['用途','purpose',20,'text'],['使用方法','usage',20,'text'],['技能来源','source',10,'source']]:[['事件时间','time',22,'range'],['技能名称','name',25,'text'],['所属范围','category',16,'category'],['操作','action',13,'action'],['说明','description',24,'text']];
+  const titles=make('tr'),filters=make('tr','filters');
+  if(state.view==='skills'){
+   const col=make('col');col.style.width='4%';$('columns').append(col);const th=make('th'),select=make('input');select.type='checkbox';select.id='select-all';select.setAttribute('aria-label','全选当前结果中的已安装技能');select.title='全选当前结果中的已安装技能';select.onchange=()=>{selection=M.toggleSelection(selection,M.select(data,state).filter(M.installed).map(row=>row.name),select.checked);syncSelection()};th.append(select);titles.append(th);filters.append(make('th'))
+  }
+  for(const [label,key,width,type]of fields){
+   const col=make('col');col.style.width=width+'%';$('columns').append(col);
+   const th=make('th');th.scope='col';const sort=make('button','sort'+(state.sort[state.view].key===key?' sorted':''));sort.type='button';sort.append(document.createTextNode(label),make('span','arrow',state.sort[state.view].key===key?(state.sort[state.view].direction===1?'↑':'↓'):'↕'));sort.setAttribute('aria-label','按'+label+'排序');if(key==='source')sort.title='提供该技能的插件或本地安装方式，不表示作者、下载网址或文件位置';if(key==='usage')sort.title='复制示例到本机 Codex 对话，替换【】中的材料；不会自动执行';sort.onclick=()=>transition({type:'SORT',key});th.append(sort);titles.append(th);
+   const cell=make('th');
+   if(type==='range'){
+    const wrap=make('div','date-range');for(const key of ['from','to']){const input=make('input','filter filter-date');input.type='date';input.id='filter-'+key;input.setAttribute('aria-label',key==='from'?'日志起始日期':'日志结束日期');input.onchange=()=>transition({type:'FILTER',key,value:input.value});wrap.append(input)}cell.append(wrap)
+   }else{
+    let control;
+    if(['category','source','status','action'].includes(type)){
+     control=make('select','filter');const values=type==='category'?categoryValues:type==='source'?sourceValues:type==='status'?['已安装','已卸载']:options(data.events.map(e=>e.action),state.logs.action);
+     control.append(new Option({category:'全部范围',source:'全部来源',status:'全部状态',action:'全部操作'}[type],''));for(const value of values)control.append(new Option(type==='category'?scopeCaption(value):value,value));
+     control.onchange=()=>transition(type==='category'?{type:'CATEGORY',value:control.value}:{type:'FILTER',key,value:control.value})
+    }else{control=make('input','filter');control.type='search';control.placeholder=key==='name'?'筛选名称':'筛选关键词';control.oninput=()=>transition({type:'FILTER',key,value:control.value})}
+    control.id='filter-'+key;control.setAttribute('aria-label','筛选'+label);cell.append(control)
+   }
+   if(key==='usage'){const mode=make('select','filter invocation-filter');mode.id='filter-invocation';mode.setAttribute('aria-label','筛选调用方式');for(const [value,label]of [['','全部调用方式'],['auto_manual','自动匹配 + 手动'],['manual','仅手动调用'],['mixed','多份策略不同'],['unknown','策略待核对']])mode.append(new Option(label,value));mode.onchange=()=>transition({type:'FILTER',key:'invocation',value:mode.value});cell.prepend(mode)}
+   filters.append(cell)
+  }
+  if(state.view==='skills'){const col=make('col');col.style.width='8%';$('columns').append(col);titles.append(make('th','','操作'));filters.append(make('th'))}
+  $('head').append(titles,filters);
+  if(id){const replacement=$(id);if(replacement){replacement.focus();if(textSelection)replacement.setSelectionRange(...textSelection)}}
+ }
+ function syncControls(){
+  for(const [key,value]of Object.entries(state[state.view])){const input=$('filter-'+key);if(input&&input.value!==value)input.value=value}
+  if($('filter-category').value!==state.category)$('filter-category').value=state.category;
+  const selected=state[state.view].exactName;$('exact-skill').hidden=!selected;$('exact-skill-name').textContent=selected?removalName(selected):'';
+  const error=M.dateError(state);$('filter-error').textContent=error;$('filter-error').hidden=!error
+ }
+ function renderCategories(){
+  const nav=$('categories'),active=document.activeElement?.dataset?.category;nav.replaceChildren();
+  const scopes=scopeMap(),counts=new Map();for(const row of M.select(data,state,true))counts.set(M.scopeKey(row),(counts.get(M.scopeKey(row))||0)+1);
+  const entries=[['全部技能','',M.select(data,state,true).length],...([...scopes.values()].sort((a,b)=>a.scope_id==='global'?-1:b.scope_id==='global'?1:a.scope_label.localeCompare(b.scope_label,'zh-CN')).map(r=>[r.scope_label,r.scope_id,counts.get(r.scope_id)||0]))];
+  for(const [label,key,count]of entries){
+   const button=make('button','category-button'+(state.category===key?' active':'')+(count===0?' no-results':''));button.type='button';button.dataset.category=key;
+   const scope=scopes.get(key);button.title=key==='global'?'用户级独立技能、插件及内置技能':scope?.scope_path||'所有监控范围；数字随当前筛选变化';
+   if(state.category===key)button.setAttribute('aria-current','true');button.append(make('span','',label),make('span','number',count));button.onclick=()=>transition({type:'CATEGORY',value:key});nav.append(button);if(active===key)button.focus()
+  }
+ }
+ function renderRows(){
+  const tbody=$('body');tbody.replaceChildren();const rows=M.select(data,state);
+  for(const row of rows){const tr=make('tr');
+   if(state.view==='skills'){const pick=make('td','pick-cell'),checkbox=make('input');checkbox.type='checkbox';checkbox.dataset.skill=row.name;checkbox.checked=selection.has(row.name);checkbox.disabled=!row.installed||busy;checkbox.setAttribute('aria-label','选择 '+removalName(row.name));checkbox.title=row.installed?'选择 '+removalName(row.name):'已经卸载，无需重复选择';checkbox.onchange=()=>{selection=M.toggleSelection(selection,[row.name],checkbox.checked);syncSelection()};pick.append(checkbox);const name=make('td'),status=make('td'),action=make('td','row-action'),usage=make('td','usage-cell'),source=make('td','source-cell');name.append(nameButton(row.name));status.append(badge(row.status));fillUsageCell(usage,row);source.title=row.source_detail||'提供该技能的插件或本地安装方式';source.append(make('span','',row.source));if(row.source_type)source.append(make('span','source-type',row.source_type));if(canRemove(row)){const button=make('button','remove-button',row.management.kind==='plugin'?'卸载插件':'卸载');button.disabled=busy;button.onclick=()=>previewUninstall([row.name]);action.append(button)}else if(row.installed){const managed=(row.management?.reason||'').includes('内置');const note=make(managed?'span':'button','managed-note',managed?'由 Codex 管理':'查看说明');note.title=row.management?.reason||'请在 Codex 中管理';if(managed){note.tabIndex=0;note.setAttribute('aria-label','由 Codex 管理：'+note.title)}else note.onclick=()=>transition({type:'DETAIL',name:row.name},true);action.append(note)}else action.append(make('span','protected-note','—'));tr.append(pick,name,make('td','category-cell',M.scopeLabel(row)),status,make('td','purpose-cell',row.purpose),usage,source,action)}
+   else{const at=make('td','event-time'),name=make('td');at.append(make('span','event-time-value',timeText(row.time)),make('span','time-kind '+row.time_kind,row.time_label));name.append(nameButton(row.name,row.id));tr.append(at,name,make('td','category-cell',M.scopeLabel(row)),make('td','history-action',row.action_label||row.action),make('td','history-summary',row.description||row.detail))}
+   tbody.append(tr)
+  }
+  if(!rows.length){const tr=make('tr'),td=make('td','empty');td.colSpan=state.view==='skills'?8:5;td.append(make('strong','','没有匹配的记录'),document.createTextNode(M.dateError(state)||'当前分类下没有符合筛选条件的记录。'));const clear=make('button','','清空当前页筛选');clear.onclick=()=>transition({type:'CLEAR'});td.append(make('br'),clear);tr.append(td);tbody.append(tr)}
+  syncSelection();
+  const parts=[scopeCaption(state.category),state.view==='skills'?(state.skills.status||'全部状态'):(state.logs.action||'全部操作')];$('count').textContent=parts.join(' · ')+' · '+rows.length+(state.view==='skills'?' 项技能':' 条日志');
+  $('skills-tab').classList.toggle('active',state.view==='skills');$('logs-tab').classList.toggle('active',state.view==='logs');$('skills-tab').setAttribute('aria-selected',state.view==='skills');$('logs-tab').setAttribute('aria-selected',state.view==='logs');
+  $('table-scroll').scrollTop=state.scroll[state.view]
+ }
+ function syncSelection(){
+  selection=M.pruneSelection(selection,data.skills);const shown=state.view==='skills'?M.select(data,state).filter(M.installed):[],selectedShown=shown.filter(row=>selection.has(row.name)).length;
+  $('selection-tools').hidden=state.view!=='skills';$('bulk-remove').hidden=state.view!=='skills';$('bulk-remove').disabled=!selection.size||busy;$('bulk-remove').textContent='卸载所选'+(selection.size?'（'+selection.size+'）':'');
+  $('select-visible').disabled=!shown.length||busy;$('select-visible').textContent=(shown.length&&selectedShown===shown.length?'取消当前结果选择':'全选当前结果')+'（'+shown.length+'）';$('clear-selection').disabled=!selection.size||busy;
+  $('selection-summary').textContent=selection.size?'已选 '+selection.size+' 项'+(selection.size>selectedShown?' · 其中 '+(selection.size-selectedShown)+' 项不在当前列表':''):'尚未选择技能';
+  const header=$('select-all');if(header){header.checked=shown.length>0&&selectedShown===shown.length;header.indeterminate=selectedShown>0&&selectedShown<shown.length;header.disabled=!shown.length||busy;header.title=header.checked?'取消当前结果选择':'全选当前结果中的已安装技能';header.setAttribute('aria-label',header.title)}
+  const byName=skillMap();for(const tr of $('body').children){const input=tr.children[0]?.children[0];if(input?.dataset?.skill){input.checked=selection.has(input.dataset.skill);input.disabled=busy||!byName.get(input.dataset.skill)?.installed}}
+ }
+ function renderDetail(){
+  const context=state.detail,dialog=$('detail');if(!context){if(dialog.open)dialog.close();return}
+  const skill=skillMap().get(context.name);if(!skill){if(dialog.open)dialog.close();return}
+  $('detail-title').textContent=displayName(skill.name);const body=$('detail-body');body.replaceChildren();
+  const selectedEvent=context.eventId?data.events.find(e=>e.id===context.eventId):null;
+  if(selectedEvent){const panel=make('section','event-panel');panel.append(make('strong','',selectedEvent.action_label||selectedEvent.action),make('p','',timeText(selectedEvent.time)+' · '+selectedEvent.time_label),make('p','',selectedEvent.description||selectedEvent.detail));body.append(panel)}
+  const dl=make('dl'),lifecycle=skill.lifecycle||{};
+  const installation=lifecycle.installed_at?timeText(lifecycle.installed_at)+'（操作时间）':lifecycle.present_at_baseline?'未记录，建账前已存在':'未记录';
+  const fields=[['安装状态',skill.status],['所属范围',M.scopeLabel(skill)],...(skill.scope_path?[['项目目录',skill.scope_path],['适用说明','此处表示该目录本地安装的技能；Codex 是否加载取决于工作目录到仓库根的查找范围。全局技能另列。']]:[['适用说明','用户级或插件 / 内置技能，可跨项目使用；实际可用性仍取决于启用配置与连接。']]),['用途',skill.purpose],['技能来源',skill.source],['来源说明',skill.source_detail||'提供该技能的插件或本地安装方式'],['安装时间',installation]];
+  if(skill.installed)fields.splice(1,0,['启用设置',skill.raw_status==='已停用'?'已关闭；文件仍安装在本机':'已开启']);
+  else fields.splice(1,0,['卸载说明',skill.raw_status==='已归档'?'已移出安装目录，另有恢复备份':'安装目录中已无该技能']);
+  if(lifecycle.first_detected_at)fields.push(['首次发现',timeText(lifecycle.first_detected_at)+'（检测时间）']);
+  const statusAction={'已卸载':'卸载','已归档':'归档','已停用':'停用','已移除':'移除'}[skill.raw_status];
+  const statusEvent=statusAction?data.events.filter(e=>e.name===skill.name&&(e.raw_action||e.action)===statusAction).at(-1):null;
+  if(statusEvent)fields.push([(statusAction==='归档'?'卸载':statusAction)+(statusEvent.time_kind==='operation'?'时间':'记录'),timeText(statusEvent.time)+'（'+statusEvent.time_label+'）']);
+  fields.push(['版本',skill.version||'未标注'],[['已归档','已卸载','已移除','未发现'].includes(skill.raw_status)?'原位置':'位置',skill.paths.join('\n')||'未记录']);
+  if(skill.archive_paths)fields.push(['恢复备份',Array.isArray(skill.archive_paths)?skill.archive_paths.join('\n'):skill.archive_paths]);
+  if(skill.recovery_paths?.length)fields.push(['卸载备份',skill.recovery_paths.join('\n')]);
+  for(const [label,value]of fields)dl.append(make('dt','',label),make('dd','',value));body.append(dl);
+  body.append(usageDetails(skill));
+  const related=data.events.filter(e=>e.name===skill.name).slice().sort((a,b)=>b.time.localeCompare(a.time));
+  if(related.length){body.append(make('h3','','操作时间线'));for(const event of related){const row=make('div','timeline-event');row.append(make('span','timeline-action',event.action_label||event.action),make('span','timeline-time',timeText(event.time)+' · '+event.time_label),make('span','timeline-description',event.description||event.detail));body.append(row)}}
+  $('skill-logs').onclick=()=>transition({type:'SKILL_LOGS',name:skill.name},true);$('locate-skill').onclick=()=>transition({type:'LOCATE_SKILL',name:skill.name},true);
+  $('detail-remove').hidden=!canRemove(skill);$('detail-remove').textContent=skill.management?.kind==='plugin'?'卸载插件':'卸载';$('detail-remove').onclick=()=>previewUninstall([skill.name]);
+  if(!dialog.open)dialog.showModal()
+ }
+ function render(){
+  if(data.discovery&&state.category&&!scopeMap().has(state.category))state.category='';
+  rendering=true;buildHead();syncControls();renderCategories();renderRows();renderDetail();$('last-scan').textContent=timeText(data.updated);rendering=false
+ }
+ function closeDetail(){if(history.state?.detailEntry)history.back();else transition({type:'CLOSE_DETAIL'})}
+ const canRemove=row=>Boolean(row.management&&['local','plugin'].includes(row.management.kind));
+ function copyButton(skill,kind='manual'){const label=kind==='auto'?'复制任务示例':'复制手动指令',text=kind==='auto'?skill.usage_auto:skill.usage;const button=make('button','copy-usage',label);button.type='button';button.title=kind==='auto'?'复制自然语言任务，供 Codex 按场景自动匹配；不会自动执行':'桌面端先输入 / 并从菜单选择技能，再填写任务；不会自动执行';button.setAttribute('aria-label',label+' '+skill.name);button.onclick=async()=>{try{if(typeof navigator==='undefined'||!navigator.clipboard?.writeText)throw Error('manual copy');await navigator.clipboard.writeText(text);button.textContent='已复制';setTimeout(()=>{button.textContent=label},1600)}catch{$('copy-text').value=text;if(!$('copy-dialog').open)$('copy-dialog').showModal();$('copy-text').focus();$('copy-text').select()}};return button}
+ $('copy-close').onclick=()=>$('copy-dialog').close();
+ async function request(route,body){
+  if(!connection)throw Error('管理连接尚未就绪，请用“更新并打开记录.cmd”打开台账。');
+  const response=await fetch(connection.url+route,{method:body?'POST':'GET',headers:{'X-Skill-Ledger-Token':connection.token,...(body?{'Content-Type':'application/json'}:{})},...(body?{body:JSON.stringify(body)}:{})});
+  const value=await response.json();if(!response.ok)throw Error(value.error||'操作失败。');return value
+ }
+ function notice(text,error=false){$('manager-notice').hidden=false;$('manager-notice').textContent=text;$('manager-notice').classList.toggle('error',error)}
+ function planReady(){const ack=$('remove-ack');$('remove-confirm').disabled=busy||!plan?.count||Boolean(ack&&!ack.checked)}
+ function renderPlan(value,names){
+  const body=$('remove-body');body.replaceChildren();const chosen=new Set(value.selected_names||names),extra=value.extra_names||value.groups.flatMap(g=>g.names).filter(n=>!chosen.has(n));
+  body.append(make('p','remove-summary','已选 '+chosen.size+' 项 · 实际卸载 '+value.count+' 项'+(extra.length?' · 另含 '+extra.length+' 项连带技能':'')+(value.blocked.length?' · '+value.blocked.length+' 项不执行':'')));
+  for(const group of value.groups){const section=make('section','remove-group');section.append(make('strong','',group.kind==='plugin'?'整个插件 · '+group.key.split('@')[0]:'本地技能'));
+   for(const name of group.names){const row=make('div','remove-skill-row');row.append(make('span','remove-skill-name',removalName(name)),make('span','scope-tag'+(chosen.has(name)?'':' extra'),chosen.has(name)?'已选':'连带移除'));section.append(row)}
+   section.append(make('p','impact-note',group.kind==='plugin'?'此操作同时卸载该插件及其连接能力。':'将移出安装目录；恢复备份保留在本机。'));body.append(section)
+  }
+  if(value.blocked.length){const section=make('section','blocked-group');section.append(make('strong','','以下项目不执行卸载'));for(const row of value.blocked){const line=make('div','blocked-item');line.append(make('span','remove-skill-name',removalName(row.name)),make('span','',row.reason));section.append(line)}body.append(section)}
+  if(value.count&&(extra.length||value.groups.some(g=>g.kind==='plugin'))){const label=make('label','impact-ack'),input=make('input');input.type='checkbox';input.id='remove-ack';input.onchange=planReady;label.append(input,make('span','','我已核对以上范围，同意同时移除列出的插件及连带技能。'));body.append(label)}
+  $('remove-confirm').textContent=value.count?'确认卸载 '+value.count+' 项':'没有可卸载项目';
+ }
+ function renderResult(result){
+  const body=$('remove-body'),success=new Set(result.results.filter(r=>r.ok).flatMap(r=>r.names)),failed=new Set(result.results.filter(r=>!r.ok).flatMap(r=>r.names));
+  body.replaceChildren(make('p','remove-summary','已卸载 '+success.size+' 项'+(failed.size?' · 失败 '+failed.size+' 项':'')+(result.blocked?.length?' · 未执行 '+result.blocked.length+' 项':'')));
+  for(const group of result.results){const section=make('section','remove-group');for(const name of group.names){const row=make('div','remove-skill-row');row.append(make('span','remove-skill-name',removalName(name)),make('span','result-tag '+(group.ok?'success':'failure'),group.ok?'已卸载':'卸载失败'));section.append(row)}if(!group.ok)section.append(make('p','error-message',group.error||'未完成卸载，请重新检查。'));body.append(section)}
+  if(result.blocked?.length){const section=make('section','blocked-group');for(const row of result.blocked)section.append(make('p','',removalName(row.name)+' · 未执行：'+row.reason));body.append(section)}
+  for(const name of success)selection.delete(name);for(const row of result.blocked||[])selection.delete(row.name);return {success:success.size,failed:failed.size}
+ }
+ async function previewUninstall(names){
+  if(busy||!names.length)return;state.scroll[state.view]=$('table-scroll').scrollTop;busy=true;plan=null;$('remove-title').textContent='核对卸载范围';$('remove-close').textContent='取消';$('remove-body').replaceChildren(make('p','','正在检查卸载范围…'));$('remove-confirm').disabled=true;$('remove-confirm').hidden=false;$('remove-confirm').textContent='正在检查…';syncSelection();
+  if($('detail').open){state.detail=null;writeHistory(false);$('detail').close()}
+  $('remove-dialog').showModal();
+  try{plan=await request('/api/uninstall/preview',{names});renderPlan(plan,names);
+  }catch(error){$('remove-body').replaceChildren(make('p','error-message',error.message));if(connection&&location.protocol==='file:'){const link=make('a','action-button','打开本机管理页面');link.href=connection.url+'/'+M.hash(state)+'&access='+encodeURIComponent(connection.token);$('remove-body').append(link)}}
+  finally{busy=false;planReady();syncSelection()}
+ }
+ $('select-visible').onclick=()=>{if(busy)return;selection=M.toggleScope(selection,M.select(data,state).filter(M.installed).map(r=>r.name));syncSelection()};
+ $('clear-selection').onclick=()=>{selection.clear();syncSelection()};
+ $('bulk-remove').onclick=()=>previewUninstall([...selection]);
+ $('remove-close').onclick=()=>{if(!busy)$('remove-dialog').close()};$('remove-dialog').addEventListener('cancel',event=>{if(busy)event.preventDefault()});
+ $('remove-confirm').onclick=async()=>{
+  if(!plan||busy||$('remove-confirm').disabled)return;busy=true;$('remove-title').textContent='正在卸载';$('remove-confirm').disabled=true;$('remove-confirm').textContent='正在卸载 '+plan.count+' 项…';$('remove-close').disabled=true;syncSelection();
+  try{const result=await request('/api/uninstall/commit',{id:plan.id});const counts=renderResult(result);$('remove-title').textContent=counts.failed?'卸载结果：部分失败':'卸载结果';
+   notice('已卸载 '+counts.success+' 项'+(counts.failed?'，失败 '+counts.failed+' 项，失败项仍保留勾选。':'，操作日志已更新。'),Boolean(counts.failed));
+   try{window.SkillLedgerReceive(result.data||await request('/api/data'))}catch{notice('卸载已执行，清单暂未刷新；请刷新页面核对结果。',true)}
+  }catch(error){$('remove-title').textContent='卸载结果待核对';$('remove-body').replaceChildren(make('p','error-message',error.message),make('p','impact-note','请求未正常完成，请刷新清单核对；不会自动重复卸载。'));notice('卸载结果待核对，请刷新清单。',true)}
+  finally{busy=false;plan=null;$('remove-confirm').hidden=true;$('remove-close').disabled=false;$('remove-close').textContent='完成';render()}
+ };
+ $('skills-tab').onclick=()=>{if(state.view!=='skills')transition({type:'TAB',view:'skills'},true)};
+ $('logs-tab').onclick=()=>{if(state.view!=='logs')transition({type:'TAB',view:'logs'},true)};
+ $('reset').onclick=()=>transition({type:'CLEAR'});$('clear-exact').onclick=()=>transition({type:'FILTER',key:'name',value:''});
+ $('detail-close').onclick=closeDetail;$('detail').addEventListener('cancel',event=>{event.preventDefault();closeDetail()});
+ $('about-button').onclick=()=>$('about').showModal();$('about-close').onclick=()=>$('about').close();
+ $('table-scroll').addEventListener('scroll',()=>{if(!rendering){state.scroll[state.view]=$('table-scroll').scrollTop;writeHistory(false,Boolean(state.detail))}});
+ $('export').onclick=event=>{event.preventDefault();const blob=new Blob([M.csv(data,state)],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),link=make('a');link.href=url;link.download='Skilune-'+(state.view==='skills'?'技能清单':'操作日志')+'.csv';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)};
+ window.addEventListener('popstate',event=>{state=M.normalize(event.state?.skillLedger?event.state.state:M.fromHash(location.hash,M.defaults()));headerSignature='';remember();render()});
+ window.SkillLedgerReceive=next=>{
+  if(!next||!Array.isArray(next.skills)||!Array.isArray(next.events))return;
+  const before=new Set(data.skills.filter(M.installed).map(r=>r.name)),added=next.skills.filter(r=>r.installed&&!before.has(r.name));
+  const changed=next.revision!==data.revision;data=prepare(next);
+  if(next.monitor?.status?.includes('扫描失败'))notice('后台扫描未完成，当前显示上次成功的清单：'+(next.monitor.error||'请检查扫描范围。'),true);
+  if(added.length)notice('发现 '+added.length+' 项新安装技能，已归入：'+[...new Set(added.map(M.scopeLabel))].join('、')+'。当前筛选可能隐藏新项目，可清空筛选查看。');
+  if(changed){state.scroll[state.view]=$('table-scroll').scrollTop;headerSignature='';render()}else $('last-scan').textContent=timeText(data.updated)
+ };
+ function scanDetails(){
+  const body=$('scan-body');body.replaceChildren();const info=data.discovery||{};
+  body.append(make('p','usage-help','按安装目录归属分类。项目视图仅列本地安装，全局技能单独查看。数量随当前筛选变化。新技能约 15 秒检查，新项目目录约 30 秒发现。'));
+  body.append(make('h3','','全局技能目录'));body.append(make('p','scan-path','用户 .agents/skills、Codex skills，以及已确认安装的插件。'));
+  body.append(make('h3','','项目发现范围'));
+  for(const root of info.roots||[])body.append(make('p','scan-path',typeof root==='string'?root:root.path));
+  if(!info.roots?.length)body.append(make('p','usage-note','尚未添加项目扫描范围。请在下方添加项目或项目集合文件夹。'));
+  body.append(make('p','usage-help','只在以上目录内查找 .agents/skills，默认最多 '+(info.depth||6)+' 层；跳过依赖、缓存和链接目录。范围以外的新项目需在下方添加。'));
+  if(info.checked_epoch)body.append(make('p','usage-help','最近项目检查：'+new Date(info.checked_epoch*1000).toLocaleString('zh-CN')));
+  for(const warning of info.warnings||[])body.append(make('p','usage-note',warning));
+ }
+ async function refreshScope(route,body){
+  const refresh=$('scan-refresh'),add=$('scan-add');refresh.disabled=true;add.disabled=true;$('scan-status').textContent='正在检查项目与技能…';
+  try{const result=await request(route,body);window.SkillLedgerReceive(result.data);scanDetails();$('scan-status').textContent='检查完成，清单已同步。';if(route==='/api/projects')$('scan-path').value=''}
+  catch(error){$('scan-status').textContent=error.message}
+  finally{refresh.disabled=false;add.disabled=false}
+ }
+ if($('scan-button')){
+  $('scan-button').onclick=()=>{scanDetails();$('scan-status').textContent='';$('scan-dialog').showModal()};$('scan-close').onclick=()=>$('scan-dialog').close();
+  $('scan-refresh').onclick=()=>refreshScope('/api/scan/refresh',{});
+  $('scan-add').onclick=()=>{const path=$('scan-path').value.trim();if(!path){$('scan-status').textContent='先填写项目文件夹绝对路径。';return}refreshScope('/api/projects',{path,collection:Boolean($('scan-collection')?.checked)})};
+ }
+ window.SkillLedgerConnect=value=>{if(value&&/^http:\/\/127\.0\.0\.1:\d+$/.test(value.url)&&typeof value.token==='string')connection=value};
+ function poll(){if(connection){request('/api/data').then(window.SkillLedgerReceive).catch(()=>{if(location.protocol==='http:')notice('后台连接中断，请重新打开台账。',true);else connection=null});return}if(location.protocol==='http:')return;for(const file of ['connection.js','live-data.js']){const script=make('script');script.src='.data/'+file+'?t='+Date.now();script.onload=()=>script.remove();script.onerror=()=>script.remove();document.head.append(script)}}
+ writeHistory(false,false);render();if(!window.__SKILL_LEDGER_TEST__){poll();setInterval(poll,15000);window.addEventListener('focus',poll)}
+ if(window.__SKILL_LEDGER_TEST__)window.__ledgerTest={getState:()=>M.normalize(state),select:()=>M.select(data,state),dispatch:transition};
+})();
+</script></body></html>

@@ -1,4 +1,4 @@
-param([ValidateSet('Open','Start','InstallStartup','StopRemove')][string]$Action='Open')
+﻿param([ValidateSet('Open','Start','InstallStartup','StopRemove')][string]$Action='Open')
 $ErrorActionPreference='Stop'
 $toolDirectory=[IO.Path]::GetFullPath((Split-Path -Parent $PSScriptRoot))
 $scriptPath=Join-Path $toolDirectory 'skill_ledger.py'
@@ -32,7 +32,7 @@ if($Action -eq 'InstallStartup'){
     $shortcut.Arguments='-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "{0}" -Action Start' -f (Join-Path $PSScriptRoot 'manage.ps1')
     $shortcut.WorkingDirectory=$toolDirectory
     $shortcut.WindowStyle=7
-    $shortcut.Description='Local Codex skill inventory and change history'
+    $shortcut.Description='Skilune · 技序'
     $shortcut.Save()
     Write-Host 'Startup recording enabled for the current user. Starting now.'
 }
